@@ -22,11 +22,11 @@
     <div class="container">
       <header>
         <h1>Point Of Sale Management</h1>
-        <p>Track sales, update inventory, generate reports, and streamline guest payments.</p>
+        <p>It serves as the central hub where customers complete their purchases, whether through cash, credit cards, or digital wallets.</p>
       </header>
 
       <div class="grid">
-        <a href="Restaurant-Buffet/Buffet.php" class="module card">
+        <a href="restaurant.php" class="module card">
           <i class="fas fa-utensils fa-2x"></i>
           <span>Restaurant/Buffet</span>
         </a>
@@ -34,7 +34,7 @@
           <i class="fas fa-glass-martini-alt fa-2x"></i>
           <span>Mini-bar Tracking</span>
         </a>
-        <a href="In-room dining Orders/In-room-dining.php" class="module card">
+        <a href="In-room.php" class="module card">
           <i class="fas fa-concierge-bell fa-2x"></i>
           <span>In-room dining Orders</span>
         </a>
@@ -42,9 +42,9 @@
           <i class="fas fa-gift fa-2x"></i>
           <span>Gift Shop Sale </span>
         </a>
-        <a href="Lounge/bar POS/Loungebar.php" class="module card">
+        <a href="loungebar.php" class="module card">
           <i class="fas fa-cocktail fa-2x"></i>
-          <span>Lounge/Bar <span>
+          <span>Lounge/Bar</span>
         </a>
       </div>
 

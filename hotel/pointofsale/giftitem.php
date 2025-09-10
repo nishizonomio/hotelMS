@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
       $stmt = $pdo->prepare("INSERT INTO giftshopitems (item_id, sale_id, item_name, quantity, price) VALUES (?, ?, ?, ?, ?)");
       $stmt->execute([$item_id, $sale_id, $item_name, $quantity, $price]);
-      header("Location: " . $_SERVER['giftshopitem']);
+      header("Location: " . $_SERVER['PHP_SELF']);
       exit;
     }
   } elseif ($action === 'edit') {
@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($item_id > 0) {
       $stmt = $pdo->prepare("DELETE FROM giftshopitems WHERE item_id = ?");
       $stmt->execute([$item_id]);
-      header("Location: " . $_SERVER['giftshopitems']);
+      header("Location: " . $_SERVER['PHP_SELF']);
       exit;
     }
   }

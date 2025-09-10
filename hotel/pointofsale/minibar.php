@@ -211,7 +211,7 @@ body {
           </div>
 
           <div>
-            <label for="price" class="block font-medium mb-1">Price (USD) <span class="text-red-600">*</span></label>
+            <label for="price" class="block font-medium mb-1">Price (₱) <span class="text-red-600">*</span></label>
             <input
               type="number"
               id="price"
@@ -276,7 +276,7 @@ body {
               <th class="px-4 py-2 border border-blue-700 text-left text-sm">Room Number</th>
               <th class="px-4 py-2 border border-blue-700 text-left text-sm">Item Name</th>
               <th class="px-4 py-2 border border-blue-700 text-left text-sm">Quantity</th>
-              <th class="px-4 py-2 border border-blue-700 text-left text-sm">Price (USD)</th>
+              <th class="px-4 py-2 border border-blue-700 text-left text-sm">Price (₱)</th>
               <th class="px-4 py-2 border border-blue-700 text-left text-sm">Usage Date</th>
               <th class="px-4 py-2 border border-blue-700 text-left text-sm">Payment ID</th>
               <th class="px-4 py-2 border border-blue-700 text-center text-sm">Actions</th>
