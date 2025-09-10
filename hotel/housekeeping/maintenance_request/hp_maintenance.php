@@ -8,26 +8,46 @@ $conn = $db->getConnection();
 
 $repo = new MaintenanceRepository($conn);
 $service = new MaintenanceService($repo);
+// Error message to show on-screen when server-side validation or DB errors occur
+$error = null;
 
 // Handle POST requests
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // Add new task
-  if (isset($_POST['add_task'])) {
-    $service->addTask($_POST);
-  }
+  try {
+    // Add new task
+    if (isset($_POST['add_task'])) {
+      $service->addTask($_POST);
+    }
 
-  // Delete has priority when present
-  if (isset($_POST['delete_task'])) {
-    $service->delete((int)$_POST['maintenance_id']);
-  }
+    // Handle multiple delete
+    if (isset($_POST['delete_selected']) && isset($_POST['selected_tasks'])) {
+      foreach ($_POST['selected_tasks'] as $task_id) {
+        $service->delete((int)$task_id);
+      }
+      header("Location: hp_maintenance.php?success=deleted");
+      exit;
+    }
 
-  // Update (edit button or status-only change)
-  if (isset($_POST['maintenance_id']) && (isset($_POST['edit_task']) || isset($_POST['status']))) {
-    $service->update($_POST);
-  }
+    // Single delete
+    if (isset($_POST['delete_task'])) {
+      $service->delete((int)$_POST['maintenance_id']);
+      header("Location: hp_maintenance.php?success=deleted");
+      exit;
+    }
 
-  header("Location: hp_maintenance.php?success=1");
-  exit;
+    // Update (edit button or status-only change)
+    if (isset($_POST['maintenance_id']) && (isset($_POST['edit_task']) || isset($_POST['status']))) {
+      $service->update($_POST);
+    }
+
+    // On success, redirect back with success flag
+    header("Location: hp_maintenance.php?success=1");
+    exit;
+  } catch (Exception $e) {
+    // Capture the error to show on the page instead of a fatal error
+    $error = $e->getMessage();
+    // allow page to render and display the error banner
+  }
 }
 
 // Fetch data
@@ -58,7 +78,11 @@ if(isset($_GET['dbg']) && $_GET['dbg']=='1'){
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<!-- modal/show styles moved to housekeeping/css/maintenance.css -->
+<link rel="stylesheet" href="../css/modals.css">
+
+  /* Ensure the select inside the modal aligns visually with inputs */
+  #taskModal .modal-content .styled-select { background: rgba(255,255,255,0.03); }
+</style>
 </head>
 <body>
 <div class="overlay">
@@ -70,6 +94,12 @@ if(isset($_GET['dbg']) && $_GET['dbg']=='1'){
                 </div>
       <h1>Housekeeping Maintenance</h1>
     </header>
+    <?php if ($error): ?>
+      <div class="server-error-banner">
+        <strong>Error:</strong>
+        <small><?= htmlspecialchars($error) ?></small>
+      </div>
+    <?php endif; ?>
 
    <!-- Stats row stands alone -->
     <div class="stats-container-glass">
@@ -120,15 +150,26 @@ if(isset($_GET['dbg']) && $_GET['dbg']=='1'){
         <span class="close" id="closeModal">&times;</span>
         <h2>Add New Maintenance Task</h2>
         <form method="POST">
-          <select name="room_id" required>
+          <label for="room_id_add">Room</label>
+          <select id="room_id_add" name="room_id" class="styled-select" required>
             <option value="">Select Room</option>
             <?php foreach($rooms as $r): ?>
               <option value="<?= $r['room_id'] ?>">Room <?= $r['room_number'] ?></option>
             <?php endforeach; ?>
           </select>
-          <input type="text" name="issue" placeholder="Issue Description" required>
-          <input type="date" name="reported_date" required>
-          <textarea name="remarks" placeholder="Remarks"></textarea>
+
+          <label for="issue_add">Issue Description</label>
+          <input id="issue_add" type="text" name="issue" placeholder="Issue Description" required>
+
+          <label for="reported_date_add">Date Issued</label>
+          <input id="reported_date_add" type="date" name="reported_date" required>
+
+          <label for="completed_date_add">Date Completed (optional)</label>
+          <input id="completed_date_add" type="date" name="completed_date">
+
+          <label for="remarks_add">Remarks</label>
+          <textarea id="remarks_add" name="remarks" placeholder="Remarks"></textarea>
+
           <button type="submit" name="add_task" class="btn add-btn">
             <i class="fas fa-plus"></i> Add Task
           </button>
@@ -136,11 +177,19 @@ if(isset($_GET['dbg']) && $_GET['dbg']=='1'){
       </div>
     </div>
 
+    <!-- Bulk Delete Form -->
+    <form id="bulkDeleteForm" method="POST" style="text-align: right; margin-bottom: 10px;">
+      <button type="submit" name="delete_selected" class="btn delete-btn bulk-delete-btn" style="display: none;">
+        <i class="fas fa-trash"></i> Delete Selected
+      </button>
+    </form>
+
     <!-- Maintenance Table -->
     <div class="table-container">
       <table class="room-table">
         <thead>
           <tr>
+            <th><input type="checkbox" id="selectAll"> Select</th>
             <th>ID</th>
             <th>Room</th>
             <th>Issue</th>
@@ -155,10 +204,15 @@ if(isset($_GET['dbg']) && $_GET['dbg']=='1'){
           <?php foreach($tasks as $row): ?>
           <form method="POST">
           <tr>
-            <td><?= $row['maintenance_id'] ?></td>
+            <td>
+              <input type="checkbox" name="selected_tasks[]" form="bulkDeleteForm" value="<?= $row['maintenance_id'] ?>" class="row-checkbox">
+            </td>
+            <td>
+              <?= $row['maintenance_id'] ?>
               <input type="hidden" name="maintenance_id" value="<?= $row['maintenance_id'] ?>">
+            </td>
               <td>
-                <select name="room_id" required>
+                <select name="room_id" class="styled-select" required>
                   <?php foreach($rooms as $r): $sel = ($r['room_id']==$row['room_id'])?'selected':''; ?>
                   <option value="<?= $r['room_id'] ?>" <?= $sel ?>>Room <?= $r['room_number'] ?></option>
                   <?php endforeach; ?>
@@ -166,18 +220,20 @@ if(isset($_GET['dbg']) && $_GET['dbg']=='1'){
               </td>
               <td><input type="text" name="issue" value="<?= htmlspecialchars($row['issue']) ?>"></td>
               <td>
-                <select name="status" onchange="this.form.submit()">
+                <select name="status" class="styled-select" onchange="this.closest('form').submit()">
                   <option value="Pending" <?= $row['status']=='Pending'?'selected':'' ?>>Pending</option>
                   <option value="In Progress" <?= $row['status']=='In Progress'?'selected':'' ?>>In Progress</option>
                   <option value="Resolved" <?= $row['status']=='Resolved'?'selected':'' ?>>Completed</option>
                 </select>
               </td>
               <td><?= $row['reported_date'] ?></td>
-              <td><?= $row['completed_date'] ?? '-' ?></td>
+              <td>
+                <input type="date" name="completed_date" value="<?= $row['completed_date'] ?? '' ?>">
+              </td>
               <td><input type="text" name="remarks" value="<?= htmlspecialchars($row['remarks'] ?? '') ?>"></td>
               <td>
                 <button type="submit" name="edit_task" class="btn save-btn"><i class="fas fa-save"></i> Save</button>
-                <button type="submit" name="delete_task" class="btn delete-btn" onclick="return confirm('Are you sure?');"><i class="fas fa-trash"></i> Delete</button>
+                <button type="submit" name="delete_task" class="btn delete-btn"><i class="fas fa-trash"></i> Delete</button>
               </td>
           </tr>
           </form>
@@ -289,6 +345,103 @@ document.addEventListener('DOMContentLoaded', ()=>{
   window.addEventListener('keydown', e=>{ if(e.key === 'Escape') hide(); });
   window.addEventListener('click', e=>{ if(e.target === modal) hide(); });
 });
+</script>
+
+<!-- Bulk delete handling -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle select all checkbox
+    const selectAll = document.getElementById('selectAll');
+    const rowCheckboxes = document.querySelectorAll('.row-checkbox');
+    const bulkDeleteBtn = document.querySelector('.bulk-delete-btn');
+
+    selectAll.addEventListener('change', function() {
+        rowCheckboxes.forEach(checkbox => checkbox.checked = this.checked);
+        updateBulkDeleteButton();
+    });
+
+    // Handle individual checkboxes
+    rowCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const allChecked = Array.from(rowCheckboxes).every(box => box.checked);
+            const someChecked = Array.from(rowCheckboxes).some(box => box.checked);
+            selectAll.checked = allChecked;
+            selectAll.indeterminate = someChecked && !allChecked;
+            updateBulkDeleteButton();
+        });
+    });
+
+    // Update bulk delete button visibility
+    function updateBulkDeleteButton() {
+        const checkedCount = document.querySelectorAll('.row-checkbox:checked').length;
+        bulkDeleteBtn.style.display = checkedCount > 0 ? 'inline-block' : 'none';
+    }
+
+    // Handle bulk delete form submission
+    document.getElementById('bulkDeleteForm').addEventListener('submit', function(e) {
+        const checkedBoxes = document.querySelectorAll('.row-checkbox:checked').length;
+        if (!confirm(`Are you sure you want to delete ${checkedBoxes} selected task${checkedBoxes > 1 ? 's' : ''}? This action cannot be undone.`)) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
+
+<!-- Delete confirmation modal -->
+<div id="confirmModal" class="confirm-modal" aria-hidden="true">
+  <div class="confirm-box" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <h3 id="confirmTitle">Confirm delete</h3>
+    <p>Are you sure you want to delete this maintenance task? This action cannot be undone.</p>
+    <div class="confirm-actions">
+      <button id="cancelDelete" class="btn cancel-btn">Cancel</button>
+      <button id="confirmDelete" class="btn delete-confirm">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Custom delete confirmation flow
+(() => {
+  const modal = document.getElementById('confirmModal');
+  const cancel = document.getElementById('cancelDelete');
+  const confirm = document.getElementById('confirmDelete');
+  let targetForm = null;
+
+  document.addEventListener('click', e => {
+    if (e.target.closest('.delete-btn')) {
+      e.preventDefault();
+      // find the form enclosing this button
+      targetForm = e.target.closest('form');
+      if (!targetForm) return;
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+  });
+
+  cancel.addEventListener('click', () => {
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
+    targetForm = null;
+  });
+
+  confirm.addEventListener('click', () => {
+    if (!targetForm) return;
+    // append a hidden input to indicate deletion and submit
+    let marker = targetForm.querySelector('input[name="delete_task"]');
+    if (!marker) {
+      marker = document.createElement('input');
+      marker.type = 'hidden';
+      marker.name = 'delete_task';
+      marker.value = '1';
+      targetForm.appendChild(marker);
+    }
+    targetForm.submit();
+  });
+
+  // close on ESC or click outside
+  window.addEventListener('keydown', e => { if (e.key === 'Escape') { modal.classList.remove('show'); modal.setAttribute('aria-hidden','true'); targetForm=null; } });
+  modal.addEventListener('click', e => { if (e.target === modal) { modal.classList.remove('show'); modal.setAttribute('aria-hidden','true'); targetForm=null; } });
+})();
 </script>
 
 </body>

@@ -39,26 +39,62 @@ final class MaintenanceRepository
     /** Add new task */
     public function addTask(int $room_id, string $issue, string $reported_date, ?string $remarks): void
     {
-        // reported_by is required in schema; use a default reporter (1) when not provided.
-        $reported_by = 1;
+        // reported_by originally defaulted to 1, but the `staff` table may be provided by another module
+        // and may not exist yet. To avoid FK constraint failures, insert NULL for reported_by when
+        // the staff table or the default reporter is missing.
         $priority = 'Low';
         $status = 'Pending';
-        $stmt = $this->db->prepare(
-            "INSERT INTO maintenance_requests (room_id, issue_description, reported_by, priority, status, reported_date, completed_date) VALUES (?, ?, ?, ?, ?, ?, NULL)"
-        );
-        $stmt->bind_param("isisis", $room_id, $issue, $reported_by, $priority, $status, $reported_date);
-        $stmt->execute();
+
+        $reported_by = null;
+        // Check if `staff` table and default reporter (id=1) exist
+        $hasStaffTable = false;
+        $res = $this->db->query("SHOW TABLES LIKE 'staff'");
+        if ($res && $res->num_rows > 0) {
+            $hasStaffTable = true;
+        }
+
+        if ($hasStaffTable) {
+            $check = $this->db->query("SELECT staff_id FROM staff WHERE staff_id = 1 LIMIT 1");
+            if ($check && $check->fetch_assoc()) {
+                $reported_by = 1;
+            }
+        }
+
+        if ($reported_by === null) {
+            $stmt = $this->db->prepare(
+                "INSERT INTO maintenance_requests (room_id, issue_description, reported_by, priority, status, reported_date, completed_date) VALUES (?, ?, NULL, ?, ?, ?, NULL)"
+            );
+            if (!$stmt) throw new RuntimeException('Prepare failed: ' . $this->db->error);
+            // types: i (room_id), s (issue), s (priority), s (status), s (reported_date)
+            $stmt->bind_param("issss", $room_id, $issue, $priority, $status, $reported_date);
+        } else {
+            $stmt = $this->db->prepare(
+                "INSERT INTO maintenance_requests (room_id, issue_description, reported_by, priority, status, reported_date, completed_date) VALUES (?, ?, ?, ?, ?, ?, NULL)"
+            );
+            if (!$stmt) throw new RuntimeException('Prepare failed: ' . $this->db->error);
+            // types: i (room_id), s (issue), i (reported_by), s (priority), s (status), s (reported_date)
+            $stmt->bind_param("isisss", $room_id, $issue, $reported_by, $priority, $status, $reported_date);
+        }
+
+        if (!$stmt->execute()) {
+            // surface DB errors for easier debugging in dev env
+            throw new RuntimeException('Insert failed: ' . $stmt->error);
+        }
     }
 
     /** Update task */
-    public function updateTask(int $id, int $room_id, string $issue, ?string $remarks): void
+    public function updateTask(int $id, int $room_id, string $issue, ?string $remarks, ?string $completed_date = null): void
     {
         // Schema does not have a 'remarks' column; update the issue_description and room_id
         $stmt = $this->db->prepare(
-            "UPDATE maintenance_requests SET room_id=?, issue_description=? WHERE request_id=?"
+            "UPDATE maintenance_requests SET room_id=?, issue_description=?, completed_date=? WHERE request_id=?"
         );
-        $stmt->bind_param("isi", $room_id, $issue, $id);
-        $stmt->execute();
+        if (!$stmt) throw new RuntimeException('Prepare failed: ' . $this->db->error);
+        // Bind types: i = room_id, s = issue, s = completed_date (nullable), i = id
+        $stmt->bind_param("issi", $room_id, $issue, $completed_date, $id);
+        if (!$stmt->execute()) {
+            throw new RuntimeException('Update failed: ' . $stmt->error);
+        }
     }
 
     /** Update task status */

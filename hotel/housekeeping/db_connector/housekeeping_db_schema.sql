@@ -1,3 +1,7 @@
+-- Disable foreign key checks during setup
+SET FOREIGN_KEY_CHECKS=0;
+
+-- Core Tables
 DROP TABLE IF EXISTS `housekeeping_tasks`;
 CREATE TABLE `housekeeping_tasks` (
   `task_id` INT NOT NULL AUTO_INCREMENT,
@@ -134,5 +138,165 @@ FROM maintenance_requests;
 -- INSERT INTO `staff` (first_name,last_name,role,email) VALUES ('Alice','Smith','Housekeeping','alice@example.com'),('Bob','Tan','Maintenance','bob@example.com');
 -- INSERT INTO `maintenance_requests` (room_id, reported_by, issue_description, priority, status, reported_date) VALUES (1,1,'Leaky faucet','Low','Pending','2025-08-01');
 
--- End of schema
+-- Error Logging
+DROP TABLE IF EXISTS `integration_error_logs`;
+CREATE TABLE `integration_error_logs` (
+    `log_id` INT NOT NULL AUTO_INCREMENT,
+    `module` VARCHAR(50) NOT NULL,
+    `operation` VARCHAR(100) NOT NULL,
+    `error_message` TEXT NOT NULL,
+    `error_code` VARCHAR(50),
+    `source_table` VARCHAR(50),
+    `affected_ids` TEXT,
+    `stack_trace` TEXT,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`log_id`),
+    INDEX `idx_module` (`module`),
+    INDEX `idx_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Stored Procedures
+DELIMITER //
+
+CREATE PROCEDURE `log_integration_error`(
+    IN p_module VARCHAR(50),
+    IN p_operation VARCHAR(100),
+    IN p_error_message TEXT,
+    IN p_error_code VARCHAR(50),
+    IN p_source_table VARCHAR(50),
+    IN p_affected_ids TEXT
+)
+BEGIN
+    INSERT INTO integration_error_logs (
+        module, operation, error_message, error_code, 
+        source_table, affected_ids
+    ) VALUES (
+        p_module, p_operation, p_error_message, p_error_code, 
+        p_source_table, p_affected_ids
+    );
+END //
+
+-- Integration Triggers
+CREATE TRIGGER after_reservation_checkout_with_logging
+AFTER UPDATE ON reservations
+FOR EACH ROW
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        CALL log_integration_error(
+            'housekeeping',
+            'checkout_task_creation',
+            CONCAT('Failed to create housekeeping task for reservation: ', NEW.reservation_id),
+            SQLSTATE,
+            'reservations',
+            NEW.reservation_id
+        );
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error creating housekeeping task after checkout';
+    END;
+
+    IF NEW.status = 'checked_out' AND OLD.status != 'checked_out' THEN
+        INSERT INTO housekeeping_tasks (room_id, task_date, task_type, status)
+        VALUES (NEW.room_id, CURDATE(), 'Cleaning', 'Pending');
+        
+        UPDATE rooms SET status = 'dirty' 
+        WHERE room_id = NEW.room_id;
+        
+        INSERT INTO housekeeping_room_status (room_id, status, last_cleaned)
+        VALUES (NEW.room_id, 'Needs Cleaning', NULL)
+        ON DUPLICATE KEY UPDATE 
+            status = 'Needs Cleaning',
+            last_cleaned = NULL;
+    END IF;
+END //
+
+CREATE TRIGGER after_maintenance_request_with_logging
+AFTER INSERT ON maintenance_requests
+FOR EACH ROW
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        CALL log_integration_error(
+            'maintenance',
+            'create_maintenance_request',
+            CONCAT('Failed to update room status for maintenance request: ', NEW.request_id),
+            SQLSTATE,
+            'maintenance_requests',
+            NEW.request_id
+        );
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error updating room status for maintenance';
+    END;
+
+    IF NEW.priority = 'High' THEN
+        UPDATE rooms SET status = 'under maintenance' 
+        WHERE room_id = NEW.room_id;
+    END IF;
+END //
+
+CREATE TRIGGER after_housekeeping_complete_with_logging
+AFTER UPDATE ON housekeeping_tasks
+FOR EACH ROW
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        CALL log_integration_error(
+            'housekeeping',
+            'task_completion',
+            CONCAT('Failed to update room status after task completion: ', NEW.task_id),
+            SQLSTATE,
+            'housekeeping_tasks',
+            NEW.task_id
+        );
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error updating room status after task completion';
+    END;
+
+    IF NEW.status = 'Completed' AND OLD.status != 'Completed' THEN
+        UPDATE rooms SET status = 'available' 
+        WHERE room_id = NEW.room_id;
+        
+        UPDATE housekeeping_room_status 
+        SET status = 'Clean', 
+            last_cleaned = CURDATE()
+        WHERE room_id = NEW.room_id;
+    END IF;
+END //
+
+CREATE TRIGGER after_walkin_checkout_with_logging
+AFTER UPDATE ON walk_ins
+FOR EACH ROW
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        CALL log_integration_error(
+            'housekeeping',
+            'walkin_checkout_task_creation',
+            CONCAT('Failed to create housekeeping task for walk-in: ', NEW.walk_in_id),
+            SQLSTATE,
+            'walk_ins',
+            NEW.walk_in_id
+        );
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error creating housekeeping task after walk-in checkout';
+    END;
+
+    IF NEW.status = 'checked_out' AND OLD.status != 'checked_out' THEN
+        INSERT INTO housekeeping_tasks (room_id, task_date, task_type, status)
+        VALUES (NEW.room_id, CURDATE(), 'Cleaning', 'Pending');
+        
+        UPDATE rooms SET status = 'dirty' 
+        WHERE room_id = NEW.room_id;
+        
+        INSERT INTO housekeeping_room_status (room_id, status, last_cleaned)
+        VALUES (NEW.room_id, 'Needs Cleaning', NULL)
+        ON DUPLICATE KEY UPDATE 
+            status = 'Needs Cleaning',
+            last_cleaned = NULL;
+    END IF;
+END //
+
+DELIMITER ;
+
+-- Re-enable foreign key checks
 SET FOREIGN_KEY_CHECKS=1;

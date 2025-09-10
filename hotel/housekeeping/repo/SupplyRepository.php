@@ -20,17 +20,32 @@ final class SupplyRepository {
     }
 
     public function getCounts(): array {
-        $categories = ['Cleaning Supply', 'Linen', 'Toiletry'];
+        // Accept several stored category variations and map them to the UI categories
         $counts = ['total' => 0, 'cleaning' => 0, 'linen' => 0, 'toiletry' => 0];
 
-    $sql = "SELECT category, COUNT(*) AS total FROM supplies GROUP BY category";
+        $sql = "SELECT category, COUNT(*) AS total FROM supplies GROUP BY category";
         $res = $this->db->query($sql);
         while ($row = $res->fetch_assoc()) {
-            $counts['total'] += (int)$row['total'];
-            if ($row['category'] === 'Cleaning Supply') $counts['cleaning'] = (int)$row['total'];
-            if ($row['category'] === 'Linen') $counts['linen'] = (int)$row['total'];
-            if ($row['category'] === 'Toiletry') $counts['toiletry'] = (int)$row['total'];
+            $catRaw = strtolower(trim((string)$row['category']));
+            $num = (int)$row['total'];
+            $counts['total'] += $num;
+
+            // Map possible stored values to canonical keys used by the UI
+            if (strpos($catRaw, 'clean') !== false || $catRaw === 'cleaning' || $catRaw === 'cleaning supply') {
+                $counts['cleaning'] += $num;
+                continue;
+            }
+            if (strpos($catRaw, 'linen') !== false) {
+                $counts['linen'] += $num;
+                continue;
+            }
+            if (strpos($catRaw, 'toiletry') !== false || strpos($catRaw, 'toilet') !== false) {
+                $counts['toiletry'] += $num;
+                continue;
+            }
+            // If category doesn't match known ones, keep it counted in total only
         }
+
         return $counts;
     }
 
@@ -46,12 +61,24 @@ final class SupplyRepository {
     }
 
     public function update(int $item_id, int $quantity, int $reorder_level): void {
-    $stmt = $this->db->prepare("UPDATE supply_stock SET quantity=? WHERE supply_id=?");
-    $stmt->bind_param("ii", $quantity, $item_id);
-    $stmt->execute();
-    $stmt2 = $this->db->prepare("UPDATE supplies SET reorder_level=? WHERE supply_id=?");
-    $stmt2->bind_param("ii", $reorder_level, $item_id);
-    $stmt2->execute();
+        $stmt = $this->db->prepare("UPDATE supply_stock SET quantity=? WHERE supply_id=?");
+        $stmt->bind_param("ii", $quantity, $item_id);
+        $stmt->execute();
+        $stmt2 = $this->db->prepare("UPDATE supplies SET reorder_level=? WHERE supply_id=?");
+        $stmt2->bind_param("ii", $reorder_level, $item_id);
+        $stmt2->execute();
+    }
+
+    public function delete(int $item_id): void {
+        // Delete from supply_stock first due to FK constraint
+        $stmt = $this->db->prepare("DELETE FROM supply_stock WHERE supply_id = ?");
+        $stmt->bind_param("i", $item_id);
+        $stmt->execute();
+        
+        // Then delete from supplies
+        $stmt = $this->db->prepare("DELETE FROM supplies WHERE supply_id = ?");
+        $stmt->bind_param("i", $item_id);
+        $stmt->execute();
     }
 }
 ?>

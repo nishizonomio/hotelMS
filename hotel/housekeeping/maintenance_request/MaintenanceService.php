@@ -31,13 +31,25 @@ final class MaintenanceService
 
     public function update(array $data): void
     {
+        // If this is a status-only change (the inline select triggers a submit),
+        // perform a lightweight status update instead of requiring full fields.
+        if (isset($data['status']) && !isset($data['edit_task'])) {
+            $status = $data['status'];
+            // Map UI 'Completed' to DB 'Resolved'
+            $dbStatus = $status === 'Completed' ? 'Resolved' : $status;
+            $completed_date = $dbStatus === 'Resolved' ? date('Y-m-d') : null;
+            $this->repo->updateStatus((int)$data['maintenance_id'], $dbStatus, $completed_date);
+            return;
+        }
+
         $this->validate($data);
 
         $this->repo->updateTask(
             (int)$data['maintenance_id'],
             (int)$data['room_id'],
             $data['issue'],
-            $data['remarks'] ?? ''
+            $data['remarks'] ?? '',
+            $data['completed_date'] ?? null
         );
     }
 

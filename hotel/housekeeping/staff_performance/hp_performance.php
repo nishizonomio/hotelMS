@@ -42,9 +42,13 @@ $tasksList = $service->tasksList();
 <link rel="stylesheet" href="../css/room_status_new.css">
 <link rel="stylesheet" href="../css/maintenance.css">
 <link rel="stylesheet" href="../css/tasks_new.css">
+<link rel="stylesheet" href="../css/forms.css">
+<link rel="stylesheet" href="../css/modals.css">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="../js_assets/charts.js" defer></script>
+<script src="../js_assets/performance.js" defer></script>
 </head>
 <body>
 <div class="overlay">

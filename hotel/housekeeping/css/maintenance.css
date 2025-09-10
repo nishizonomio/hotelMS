@@ -235,15 +235,22 @@ header h1 {
 /* ===================== Maintenance Table ===================== */
 .table-container {
     overflow-x: auto;
+    margin: 20px auto;
+    max-width: 95%; /* Wider container */
+    background: rgba(255,255,255,0.04);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
 }
 
 .room-table {
-    width: 100%;
+    min-width: 1500px; /* Ensure minimum width */
     border-collapse: collapse;
     background: rgba(255,255,255,0.1);
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    table-layout: auto; /* Changed to auto for more flexible layout */
 }
 
 .room-table th,
@@ -254,9 +261,83 @@ header h1 {
     text-align: left;
 }
 
+/* Column widths */
+.room-table th:nth-child(1), /* Select checkbox */
+.room-table td:nth-child(1) {
+    width: 60px;
+    min-width: 60px;
+}
+
+.room-table th:nth-child(2), /* ID */
+.room-table td:nth-child(2) {
+    width: 50px;
+    min-width: 50px;
+}
+
+.room-table th:nth-child(3), /* Room */
+.room-table td:nth-child(3) {
+    width: 100px;
+    min-width: 100px;
+}
+
+.room-table th:nth-child(4), /* Issue */
+.room-table td:nth-child(4) {
+    width: 300px;
+    min-width: 300px;
+}
+
+.room-table th:nth-child(5), /* Status */
+.room-table td:nth-child(5) {
+    width: 120px;
+    min-width: 120px;
+}
+
+.room-table th:nth-child(6), /* Reported Date */
+.room-table td:nth-child(6) {
+    width: 130px;
+    min-width: 130px;
+}
+
+.room-table th:nth-child(7), /* Completed Date */
+.room-table td:nth-child(7) {
+    width: 130px;
+    min-width: 130px;
+}
+
+.room-table th:nth-child(8), /* Remarks */
+.room-table td:nth-child(8) {
+    width: 250px;
+    min-width: 250px;
+}
+
+.room-table th:nth-child(9), /* Actions */
+.room-table td:nth-child(9) {
+    width: 200px;
+    min-width: 200px;
+}
+
+.room-table td:nth-child(9) {
+    padding: 8px 15px;
+}
+
+.room-table td:nth-child(9) form {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+    min-width: 180px;
+}
+
+.room-table td:nth-child(9) .btn {
+    padding: 8px 12px;
+    min-width: 85px;
+}
+
 .room-table th {
     background: rgba(255,255,255,0.15);
     font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .room-table tr:hover {
@@ -264,12 +345,69 @@ header h1 {
 }
 
 .room-table select {
-    padding: 4px 8px;
-    border-radius: 6px;
-    border: 1px solid rgba(255,255,255,0.3);
-    background: rgba(255,255,255,0.1);
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(0,0,0,0.2);
     color: #fff;
     outline: none;
+    width: 100%;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+/* Table input styling */
+.room-table input[type="text"],
+.room-table input[type="date"] {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(0,0,0,0.2);
+    color: #fff;
+    outline: none;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+/* Text inputs can expand on focus */
+.room-table input[type="text"]:focus {
+    position: absolute;
+    min-width: 300px;
+    z-index: 20;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.room-table input[type="date"] {
+    padding-right: 30px; /* Space for calendar icon */
+    background: rgba(0,0,0,0.2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z'/%3E%3C/svg%3E") no-repeat right 8px center;
+    background-size: 16px;
+}
+
+/* Hide default calendar icon */
+.room-table input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Input states */
+.room-table input:hover,
+.room-table select:hover {
+    border-color: rgba(255,255,255,0.25);
+    background: rgba(0,0,0,0.25);
+}
+
+.room-table input:focus,
+.room-table select:focus {
+    border-color: rgba(255,255,255,0.35);
+    background: rgba(0,0,0,0.3);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 /* Month selector styling */
@@ -374,13 +512,54 @@ header h1 {
 .modal.show { display:flex; align-items:center; justify-content:center; pointer-events:auto; }
 
 /* Reusable button utilities */
-.btn { display: inline-block; padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; transition: background 0.2s ease, color 0.2s ease; }
-.add-btn { background: #ffc107; color: #333; }
-.add-btn:hover { background: #e0a800; color: #fff; }
-.save-btn { background: #3498db; color: #fff; }
-.save-btn:hover { background: #2d85c7; }
-.delete-btn { background: #e74c3c; color: #fff; }
-.delete-btn:hover { background: #c44136; }
+.btn { 
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.2s ease;
+    min-width: fit-content;
+    white-space: nowrap;
+}
+
+.btn i {
+    font-size: 12px;
+}
+
+.add-btn { 
+    background: #ffc107; 
+    color: #333; 
+}
+.add-btn:hover { 
+    background: #e0a800; 
+    color: #fff; 
+}
+
+.save-btn { 
+    background: #3498db; 
+    color: #fff;
+}
+.save-btn:hover { 
+    background: #2d85c7; 
+}
+
+.delete-btn { 
+    background: #e74c3c; 
+    color: #fff;
+}
+.delete-btn:hover { 
+    background: #c44136; 
+}
+
+/* Ensure buttons in table cells don't shrink */
+.room-table .btn {
+    flex-shrink: 0;
+}
 
 /* ===================== Footer ===================== */
 

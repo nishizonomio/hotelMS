@@ -165,7 +165,34 @@ final class RoomStatusService
 }
 
 // ================= CONTROLLER =====================
-$repo    = new RoomStatusRepository($db->getConnection());
+// Resolve a mysqli connection safely. Prefer $db->getConnection(), fall back to
+// global $conn created by the connector, or create a new Database as last resort.
+$mysqli = null;
+if (isset($db) && is_object($db) && method_exists($db, 'getConnection')) {
+    try {
+        $mysqli = $db->getConnection();
+    } catch (Throwable $e) {
+        // swallow and allow fallbacks
+        $mysqli = null;
+    }
+}
+
+if (!$mysqli instanceof mysqli) {
+    if (isset($conn) && $conn instanceof mysqli) {
+        $mysqli = $conn;
+    } else {
+        // Try to create a new Database instance and get connection
+        try {
+            $db = new Database();
+            $mysqli = $db->getConnection();
+        } catch (Throwable $e) {
+            // Fatal: cannot proceed without DB
+            die('Database connection unavailable: ' . $e->getMessage());
+        }
+    }
+}
+
+$repo    = new RoomStatusRepository($mysqli);
 $service = new RoomStatusService($repo);
 
 // Handle POST (update from form)

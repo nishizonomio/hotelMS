@@ -24,7 +24,7 @@ include 'roomstatus.php';
       <header>
         <div class="nav-buttons">
                     <a href="../housekeeping.php" class="nav-btn back-btn"><i class="fas fa-arrow-left"></i> Back</a>
-                    <a href="../../index.php" class="nav-btn back-btn"><i class="fas fa-home"></i> Home</a>
+                    <a href="../../homepage/index.php" class="nav-btn back-btn"><i class="fas fa-home"></i> Home</a>
                 </div>
         <h1>Room Status Dashboard</h1>
       </header>

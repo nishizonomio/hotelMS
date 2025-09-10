@@ -25,6 +25,10 @@ final class SupplyService {
             $this->repo->upsert($data['item_name'], $data['category'], $data['quantity'], $data['unit'], $data['reorder_level']);
         }
     }
+
+    public function delete(int $item_id): void {
+        $this->repo->delete($item_id);
+    }
 }
 ?>
 
