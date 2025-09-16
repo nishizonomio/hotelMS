@@ -33,7 +33,7 @@
           <i class="fas fa-file-invoice-dollar"></i>
           <span>Billing & Payments</span>
         </a>
-        <a href="crm.php" class="module">
+        <a href="../CRM/crm.php" class="module">
           <i class="fas fa-user-friends"></i>
           <span>Guest Relationship Management </span>
         </a>

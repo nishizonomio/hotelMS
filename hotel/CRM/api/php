@@ -1,0 +1,15 @@
+<?php
+include 'db.php';
+
+$id = $_POST['id'];
+$status = $_POST['status'];
+$comment = $_POST['comment'];
+
+$stmt = $pdo->prepare("UPDATE complaints SET status=?, comment=? WHERE id=?");
+echo $stmt->execute([$status, $comment, $id]) ? "ok" : "error";
+?>
+      <div class="campaign-actions">
+        <button class="btn btn-secondary" onclick="editCampaign(${c.id})" style="margin-right: 8px; padding: 8px 16px; background: #6b7280; color: white; border: none; border-radius: 6px; cursor: pointer;">✏️ Edit</button>
+        <button class="btn btn-primary" onclick="viewCampaign(${c.id})" style="margin-right: 8px; padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer;">👁️ View</button>
+        <button class="btn btn-danger" onclick="deleteCampaign(${c.id})" style="padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer;">🗑️ Delete</button>
+      </div>`;
