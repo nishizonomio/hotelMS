@@ -49,7 +49,7 @@
           <i class="fas fa-utensils"></i>
           <span>Kitchen & Restaurant </span>
         </a>
-        <a href="maintenance.php" class="module">
+        <a href="hotel/homepage/maintenance.php" class="module">
           <i class="fas fa-tools"></i>
           <span>Maintenance</span>
         </a>
