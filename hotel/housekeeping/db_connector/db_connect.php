@@ -1,10 +1,4 @@
 <?php
-/**
- * Database connection wrapper
- * Usage:
- *   $db = new Database();
- *   $conn = $db->getConnection();
- */
 class Database {
     private string $host;
     private string $user;
@@ -12,18 +6,18 @@ class Database {
     private string $dbName;
     public ?mysqli $conn = null;
 
-    public function __construct(array $config = []) {
-        // defaults for local XAMPP
-        $this->host = $config['host'] ?? '127.0.0.1';
-        $this->user = $config['user'] ?? 'root';
-        $this->pass = $config['pass'] ?? '';
-        $this->dbName = $config['db'] ?? 'hotel';
+    public function __construct() {
+        $this->host = '127.0.0.1';
+        $this->user = 'root';
+        $this->pass = '';
+        $this->dbName = 'hotel';  // Using main hotel database
 
         // Make mysqli throw exceptions on errors
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
         try {
-            $this->conn = new mysqli($this->host, $this->user, $this->pass, $this->dbName);
+            // Connect to hotel database directly
+            $this->conn = new mysqli($this->host, $this->user, $this->pass, 'hotel');
             // set charset
             $this->conn->set_charset('utf8mb4');
             // Maintain public property for backward compatibility
@@ -89,21 +83,20 @@ if (!isset($conn)) {
 }
 
 // Ensure housekeeping-specific tables exist. If not, try to create them
-// from the bundled schema file. This keeps housekeeping functional when the
-// main project hasn't created these tables yet.
+// from the bundled schema file. All tables will be created in the 'hotel' database.
 function ensure_housekeeping_schema(mysqli $conn): void {
-    // list a representative table that should exist if schema was applied
+    // Check for housekeeping tasks table in the hotel database
     $checkTable = 'housekeeping_tasks';
     try {
         $res = $conn->query("SHOW TABLES LIKE '" . $conn->real_escape_string($checkTable) . "'");
         if ($res && $res->num_rows > 0) {
-            return; // schema already present
+            return; // schema already present in hotel database
         }
     } catch (Throwable $e) {
-        // If SHOW TABLES fails for some reason, continue to attempt schema creation
+        // If SHOW TABLES fails, continue to attempt schema creation
     }
 
-    $schemaPath = __DIR__ . '/housekeeping_db_schema.sql';
+    $schemaPath = __DIR__ . '/combined_housekeeping_schema.sql';
     if (!file_exists($schemaPath)) {
         // nothing we can do here
         return;

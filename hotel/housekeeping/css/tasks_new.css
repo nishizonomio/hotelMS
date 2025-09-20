@@ -18,6 +18,43 @@ h1 {
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
+/* Notification styling */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: #fff;
+    z-index: 1100;
+    display: none;
+    animation: slideIn 0.3s ease-out;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.notification.success {
+    background-color: rgba(46, 125, 50, 0.95);
+}
+
+.notification.error {
+    background-color: rgba(198, 40, 40, 0.95);
+}
+
+.notification.info {
+    background-color: rgba(2, 136, 209, 0.95);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
 /* Enhanced Stats Cards */
 .stats-summary {
     display: flex;

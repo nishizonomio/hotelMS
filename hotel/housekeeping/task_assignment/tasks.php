@@ -160,13 +160,13 @@ while ($s = $staffResult->fetch_assoc()) {
             <div class="modal-content">
                 <button class="close-btn" onclick="hideTaskForm()">&times;</button>
                 <h2 class="form-title">Add New Task</h2>
-                <form id="addTaskForm" method="POST">
+                <form id="addTaskForm" method="POST" onsubmit="return validateTaskForm()">
                     <input type="hidden" name="task_id" id="task_id">
 
                     <div class="form-group">
-                        <label for="room_id">Room:</label>
+                        <label for="room_id">Room Number</label>
                         <select name="room_id" id="room_id" required>
-                            <option value="">--Select Room--</option>
+                            <option value="">Select a room</option>
                             <?php foreach($rooms as $r): ?>
                                 <option value="<?= $r['room_id'] ?>"><?= htmlspecialchars($r['room_number']) ?></option>
                             <?php endforeach; ?>
@@ -174,19 +174,21 @@ while ($s = $staffResult->fetch_assoc()) {
                     </div>
 
                     <div class="form-group">
-                        <label for="task_type">Task Type:</label>
+                        <label for="task_type">Task Type</label>
                         <select name="task_type" id="task_type" required>
-                            <option value="Cleaning">Cleaning</option>
-                            <option value="Laundry">Laundry</option>
-                            <option value="Turn-down">Turn-down</option>
+                            <option value="">Select task type</option>
+                            <option value="Cleaning">Room Cleaning</option>
+                            <option value="Laundry">Laundry Service</option>
+                            <option value="Turn-down">Turn-down Service</option>
                             <option value="Deep Cleaning">Deep Cleaning</option>
+                            <option value="Maintenance">Maintenance Check</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="staff_id">Assign To:</label>
+                        <label for="staff_id">Assign Staff Member</label>
                         <select name="staff_id" id="staff_id" required>
-                            <option value="">--Select Staff--</option>
+                            <option value="">Select staff member</option>
                             <?php foreach($staffList as $s): ?>
                                 <option value="<?= $s['staff_id'] ?>"><?= htmlspecialchars($s['staff_name']) ?></option>
                             <?php endforeach; ?>
@@ -194,8 +196,8 @@ while ($s = $staffResult->fetch_assoc()) {
                     </div>
 
                     <div class="form-group">
-                        <label for="task_date">Date:</label>
-                        <input type="date" name="task_date" id="task_date" required>
+                        <label for="task_date">Schedule Date</label>
+                        <input type="date" name="task_date" id="task_date" required min="<?= date('Y-m-d') ?>">
                     </div>
 
                     <div class="form-group">

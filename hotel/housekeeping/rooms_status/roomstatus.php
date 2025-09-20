@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../db_connector/db_connect.php';
 
-$db = new Database();
+$db = new Database();  // Will use the main 'hotel' database
 final class RoomStatus
 {
     public int $room_id;

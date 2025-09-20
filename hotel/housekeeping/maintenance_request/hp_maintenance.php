@@ -79,7 +79,7 @@ if(isset($_GET['dbg']) && $_GET['dbg']=='1'){
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" href="../css/modals.css">
-
+<style>
   /* Ensure the select inside the modal aligns visually with inputs */
   #taskModal .modal-content .styled-select { background: rgba(255,255,255,0.03); }
 </style>
@@ -146,33 +146,47 @@ if(isset($_GET['dbg']) && $_GET['dbg']=='1'){
 
     <!-- Modal -->
     <div id="taskModal" class="modal">
-      <div class="modal-content glass">
-        <span class="close" id="closeModal">&times;</span>
-        <h2>Add New Maintenance Task</h2>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Add New Maintenance Task</h2>
+          <button type="button" class="close" id="closeModal">&times;</button>
+        </div>
         <form method="POST">
-          <label for="room_id_add">Room</label>
-          <select id="room_id_add" name="room_id" class="styled-select" required>
-            <option value="">Select Room</option>
-            <?php foreach($rooms as $r): ?>
-              <option value="<?= $r['room_id'] ?>">Room <?= $r['room_number'] ?></option>
-            <?php endforeach; ?>
-          </select>
+          <div class="form-group">
+            <label for="room_id_add">Room</label>
+            <select id="room_id_add" name="room_id" class="form-control" required>
+              <option value="">Select Room</option>
+              <?php foreach($rooms as $r): ?>
+                <option value="<?= $r['room_id'] ?>">Room <?= $r['room_number'] ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
 
-          <label for="issue_add">Issue Description</label>
-          <input id="issue_add" type="text" name="issue" placeholder="Issue Description" required>
+          <div class="form-group">
+            <label for="issue_add">Issue Description</label>
+            <input id="issue_add" type="text" name="issue" class="form-control" placeholder="Describe the maintenance issue" required>
+          </div>
 
-          <label for="reported_date_add">Date Issued</label>
-          <input id="reported_date_add" type="date" name="reported_date" required>
+          <div class="form-group">
+            <label for="reported_date_add">Date Issued</label>
+            <input id="reported_date_add" type="date" name="reported_date" class="form-control" required>
+          </div>
 
-          <label for="completed_date_add">Date Completed (optional)</label>
-          <input id="completed_date_add" type="date" name="completed_date">
+          <div class="form-group">
+            <label for="completed_date_add">Date Completed (optional)</label>
+            <input id="completed_date_add" type="date" name="completed_date" class="form-control">
+          </div>
 
-          <label for="remarks_add">Remarks</label>
-          <textarea id="remarks_add" name="remarks" placeholder="Remarks"></textarea>
+          <div class="form-group">
+            <label for="remarks_add">Remarks</label>
+            <textarea id="remarks_add" name="remarks" class="form-control" placeholder="Additional notes or remarks"></textarea>
+          </div>
 
-          <button type="submit" name="add_task" class="btn add-btn">
-            <i class="fas fa-plus"></i> Add Task
-          </button>
+          <div class="modal-footer">
+            <button type="submit" name="add_task" class="btn btn-primary">
+              <i class="fas fa-plus"></i> Add Task
+            </button>
+          </div>
         </form>
       </div>
     </div>
@@ -388,13 +402,16 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- Delete confirmation modal -->
-<div id="confirmModal" class="confirm-modal" aria-hidden="true">
-  <div class="confirm-box" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
-    <h3 id="confirmTitle">Confirm delete</h3>
-    <p>Are you sure you want to delete this maintenance task? This action cannot be undone.</p>
-    <div class="confirm-actions">
-      <button id="cancelDelete" class="btn cancel-btn">Cancel</button>
-      <button id="confirmDelete" class="btn delete-confirm">Delete</button>
+<div id="confirmModal" class="modal" aria-hidden="true">
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="modal-header">
+      <h2 id="confirmTitle" class="modal-title">Confirm Delete</h2>
+      <button type="button" class="close" id="closeConfirm">&times;</button>
+    </div>
+    <p style="color: #fff; margin: 20px 0;">Are you sure you want to delete this maintenance task? This action cannot be undone.</p>
+    <div class="modal-footer">
+      <button id="cancelDelete" class="btn btn-secondary">Cancel</button>
+      <button id="confirmDelete" class="btn btn-primary" style="background: #dc3545;">Delete</button>
     </div>
   </div>
 </div>

@@ -1,17 +1,66 @@
 <?php
+use Housekeeping\Supplies\DB\InventoryLogger;
+use Housekeeping\Supplies\Adapters\InventoryAdapter;
+
 final class SupplyService {
     private SupplyRepository $repo;
+    private $inventoryAdapter;
+    private $logger;
 
-    public function __construct(SupplyRepository $repo) {
+    public function __construct(SupplyRepository $repo, $inventoryAdapter = null) {
         $this->repo = $repo;
+        $this->inventoryAdapter = $inventoryAdapter;
+        $this->logger = new InventoryLogger();
     }
 
     public function list(): array {
-        return $this->repo->getAll();
+        try {
+            $supplies = $this->repo->getAll();
+            
+            // Include items from main inventory if adapter is available
+            if ($this->inventoryAdapter) {
+                $mainInventoryItems = $this->inventoryAdapter->getRelevantInventoryItems();
+                foreach ($mainInventoryItems as $item) {
+                    $supplies[] = [
+                        'item_name' => $item['item_name'],
+                        'category' => $item['category'],
+                        'quantity' => $item['quantity_in_stock'],
+                        'reorder_level' => $item['reorder_level'],
+                        'source' => 'main_inventory',
+                        'item_id' => $item['item_id']
+                    ];
+                }
+            }
+            
+            return $supplies;
+        } catch (Exception $e) {
+            $this->logger->logOperation('list_supplies', [], $e->getMessage());
+            throw $e;
+        }
     }
 
     public function counts(): array {
-        return $this->repo->getCounts();
+        try {
+            $counts = $this->repo->getCounts();
+            
+            // Initialize counts if not set
+            if (!isset($counts['total_items'])) $counts['total_items'] = 0;
+            if (!isset($counts['low_stock'])) $counts['low_stock'] = 0;
+            
+            // Include main inventory counts if adapter is available
+            if ($this->inventoryAdapter) {
+                $mainInventoryItems = $this->inventoryAdapter->getRelevantInventoryItems();
+                $counts['total_items'] += count($mainInventoryItems);
+                
+                $lowStockItems = $this->inventoryAdapter->getItemsNeedingReorder();
+                $counts['low_stock'] += count($lowStockItems);
+            }
+            
+            return $counts;
+        } catch (Exception $e) {
+            $this->logger->logOperation('get_counts', [], $e->getMessage());
+            throw $e;
+        }
     }
 
     public function save(array $data): void {

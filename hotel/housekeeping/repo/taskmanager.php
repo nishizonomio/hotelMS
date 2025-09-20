@@ -50,33 +50,50 @@ public function updateTask($task_id, $room_id, $task_type, $staff_id, $status) {
 
     // Add or Update Task
     public function saveTask($data) {
-        if (!empty($data['task_id'])) {
-            $stmt = $this->conn->prepare("UPDATE housekeeping_tasks 
-                SET room_id=?, task_type=?, staff_id=?, task_date=?, status=?, remarks=? 
-                WHERE task_id=?");
-            $stmt->bind_param("isisssi", 
-                $data['room_id'], 
-                $data['task_type'], 
-                $data['staff_id'], 
-                $data['task_date'], 
-                $data['status'], 
-                $data['remarks'], 
-                $data['task_id']
-            );
-        } else {
-            $stmt = $this->conn->prepare("INSERT INTO housekeeping_tasks 
-                (room_id, task_type, staff_id, task_date, status, remarks) 
-                VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("isisss", 
-                $data['room_id'], 
-                $data['task_type'], 
-                $data['staff_id'], 
-                $data['task_date'], 
-                $data['status'], 
-                $data['remarks']
-            );
+        try {
+            if (!empty($data['task_id'])) {
+                $stmt = $this->conn->prepare("UPDATE housekeeping_tasks 
+                    SET room_id=?, task_type=?, staff_id=?, task_date=?, status=?, remarks=? 
+                    WHERE task_id=?");
+                if (!$stmt) {
+                    throw new Exception("Prepare failed: " . $this->conn->error);
+                }
+                $stmt->bind_param("isisssi", 
+                    $data['room_id'], 
+                    $data['task_type'], 
+                    $data['staff_id'], 
+                    $data['task_date'], 
+                    $data['status'], 
+                    $data['remarks'], 
+                    $data['task_id']
+                );
+            } else {
+                $stmt = $this->conn->prepare("INSERT INTO housekeeping_tasks 
+                    (room_id, task_type, staff_id, task_date, status, remarks) 
+                    VALUES (?, ?, ?, ?, ?, ?)");
+                if (!$stmt) {
+                    throw new Exception("Prepare failed: " . $this->conn->error);
+                }
+                $stmt->bind_param("isisss", 
+                    $data['room_id'], 
+                    $data['task_type'], 
+                    $data['staff_id'], 
+                    $data['task_date'], 
+                    $data['status'], 
+                    $data['remarks']
+                );
+            }
+            
+            $success = $stmt->execute();
+            if (!$success) {
+                throw new Exception("Execute failed: " . $stmt->error);
+            }
+            return true;
+            
+        } catch (Exception $e) {
+            error_log("TaskManager saveTask error: " . $e->getMessage());
+            throw $e;
         }
-        return $stmt->execute();
     }
 
     // Delete Task

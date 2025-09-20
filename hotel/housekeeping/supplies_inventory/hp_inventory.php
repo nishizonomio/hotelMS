@@ -1,14 +1,32 @@
 <?php
 require_once __DIR__ . '/../db_connector/db_connect.php';
+require_once __DIR__ . '/adapters/InventoryAdapter.php';
+require_once __DIR__ . '/db/InventoryLogger.php';
 include 'Supplies.php';
 include __DIR__ . '/../repo/SupplyRepository.php';
 include 'SupplyService.php';
 
+use Housekeeping\Supplies\Adapters\InventoryAdapter;
+
+// Create database connections
 $db = new Database(); // Database class from db_connect.php
 $conn = $db->getConnection();
 
+// Create PDO connection
+try {
+    $dsn = "mysql:host=127.0.0.1;dbname=hotel;charset=utf8mb4";
+    $pdo = new PDO($dsn, 'root', '', [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]);
+}
+catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+
+$inventoryAdapter = new InventoryAdapter($pdo);
 $repo = new SupplyRepository($conn);
-$service = new SupplyService($repo);
+$service = new SupplyService($repo, $inventoryAdapter);
 // Early GET endpoint for stats so AJAX fetches receive JSON (avoid full page HTML)
 if (isset($_GET['get_stats'])) {
   if (ob_get_level()) ob_clean();
@@ -151,8 +169,59 @@ $counts = $service->counts();
 <link rel="stylesheet" href="../css/modals.css">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/notifications.css">
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.classList.add('fade-out');
+            setTimeout(() => notification.remove(), 300);
+        }, 5000);
+    }
+
+    // Function to check inventory status
+    async function checkInventoryStatus() {
+        try {
+            const response = await fetch('get_inventory_status.php');
+            const data = await response.json();
+            
+            if (data.hasUpdates) {
+                showNotification('ℹ Inventory status has changed. Refreshing...', 'info');
+                location.reload();
+            }
+        } catch (error) {
+            console.error('Error checking inventory status:', error);
+        }
+    }
+
+    // Check inventory status every 30 seconds
+    setInterval(checkInventoryStatus, 30000);
+
+    // Handle success messages from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('success')) {
+        const action = urlParams.get('success');
+        switch (action) {
+            case 'added':
+                showNotification('✅ Item added successfully', 'success');
+                break;
+            case 'updated':
+                showNotification('✅ Item updated successfully', 'success');
+                break;
+            case 'deleted':
+                showNotification('✅ Item(s) deleted successfully', 'success');
+                break;
+        }
+        // Clean up URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  </script>
   <style>
   /* Page layout and theme to match screenshot */
   :root{--card-bg:rgba(0,0,0,0.45); --card-border:rgba(255,255,255,0.06);}
@@ -576,7 +645,7 @@ $counts = $service->counts();
           })
           .catch(error => {
             console.error('Error:', error);
-            alert('Error adding item. Please try again.');
+            showNotification('❌ Error adding item. Please try again.', 'error');
           });
         });
       }
