@@ -1,0 +1,44 @@
+# ==========================================
+# PHP Billing System Gitignore
+# ==========================================
+
+# Composer dependencies
+/vendor/
+composer.lock
+
+# Environment files
+.env
+.env.*   # e.g., .env.local, .env.staging
+
+# Logs & debug
+*.log
+/storage/logs/
+error_log
+
+# IDE & editor junk
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Cache & sessions
+*.cache
+*.session
+/tmp/
+cache/
+
+# Node / frontend (if you add npm later)
+node_modules/
+npm-debug.log*
+
+# Coverage / test reports
+coverage/
+.phpunit.result.cache
+
+# OS-specific
+ehthumbs.db
+desktop.ini

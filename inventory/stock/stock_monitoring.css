@@ -1,0 +1,195 @@
+body, html {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: url('/hotel/homepage/hotel_room.jpg') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+}
+
+.overlay {
+    background-color: rgba(0,0,0,0.88);
+    min-height: 100vh;
+    padding: 40px 20px;
+    box-sizing: border-box;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 32px;
+    font-weight: 600;
+}
+
+p {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 16px;
+    color: #ccc;
+}
+
+.tab-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 0 4px;
+    background: #555;
+    color: #fff;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+.tab-button:hover { background: #777; }
+.tab-button.active { background: #FF9800; }
+
+.search-container {
+    width: 95%;
+    margin: 0 auto 20px;
+    text-align: center;
+}
+
+.search-form {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-form input,
+.search-form select,
+.search-form button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+}
+
+.search-form button {
+    background: #FF9800;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.search-form button:hover { background: #e67e22; }
+
+.search-container a button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    background: #FF9800;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.search-container a button:hover {
+    background: #e67e22;
+}
+
+table {
+    margin: 20px auto;
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 95%;
+    background: #23272f;
+    color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 18px rgba(0,0,0,0.15);
+    opacity: 0.95;
+}
+
+th, td {
+    padding: 14px 12px;
+    text-align: center;
+    font-size: 15px;
+    border: none;
+}
+
+th {
+    background: #303642;
+    font-weight: 700;
+    font-size: 16px;
+    color: #FF9800;
+}
+
+tr:hover td {
+    background: #2e3440;
+    transition: background 0.2s;
+}
+
+td[contenteditable],
+.qty-input {
+    cursor: text;
+    padding: 6px;
+    background: transparent;
+    font-weight: 700;
+    text-align: center;
+}
+
+.used-input {
+    cursor: text;
+    padding: 6px;
+    background: transparent;
+    font-weight: 700;
+    text-align: center;
+    color: #fff;
+}
+
+.low-stock {
+    color: #e74c3c;
+    font-weight: 700;
+}
+
+.avg-stock {
+    color: #f1c40f;
+    font-weight: 700;
+}
+
+.high-stock {
+    color: #27ae60;
+    font-weight: 700;
+}
+
+select.category-select {
+    width: 100%;
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-size: 14px;
+    background: #fff;
+    color: #000;
+}
+
+.add-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.add-form input, .add-form select, .add-form button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+}
+
+.add-form button {
+    background-color: #FF9800;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.add-form button:hover { background-color: #e67e22; }
+
+

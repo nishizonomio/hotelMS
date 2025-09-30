@@ -1,0 +1,139 @@
+/* Walk-in Registration Layout */
+.walk-in-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.walk-in-layout .left-section,
+.walk-in-layout .right-section {
+    width: 100%;
+}
+
+.form-section {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.form-section h2 {
+    margin-bottom: 20px;
+    color: #ffd700;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.room-selection {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.room-card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.room-card:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.room-card.selected {
+    background: rgba(255, 215, 0, 0.15);
+    border: 1px solid #ffd700;
+}
+
+.recent-section {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 25px;
+    border-radius: 10px;
+    height: fit-content;
+}
+
+.recent-section h2 {
+    margin-bottom: 20px;
+    color: #ffd700;
+}
+
+.table-container {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-top: 15px;
+}
+
+/* Responsive Layout Adjustments */
+@media (max-width: 1200px) {
+    .walk-in-layout {
+        grid-template-columns: 1fr;
+        padding: 15px;
+    }
+    
+    .walk-in-layout .left-section,
+    .walk-in-layout .right-section {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .room-selection {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .walk-in-layout {
+        padding: 10px;
+    }
+
+    .form-section,
+    .recent-section {
+        padding: 15px;
+    }
+
+    .room-selection {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+
+    .table-container {
+        max-height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .walk-in-layout {
+        padding: 5px;
+    }
+
+    .room-selection {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group input,
+    .form-group select {
+        font-size: 14px;
+    }
+}

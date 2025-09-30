@@ -1,0 +1,180 @@
+body, html {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: url('/hotel/homepage/hotel_room.jpg') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+}
+
+.overlay {
+    background-color: rgba(0,0,0,0.88);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 18px;
+    box-sizing: border-box;
+}
+
+.container {
+    width: 100%;
+    max-width: 450px;
+    background-color: rgba(255,255,255,0.1);
+    padding: 25px 20px;
+    border-radius: 11px;
+    box-shadow: 0 0 18px rgba(0,0,0,0.7);
+    backdrop-filter: blur(9px);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 9px;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+p {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #ccc;
+}
+
+.grn-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.grn-form input,
+.grn-form select,
+.grn-form button {
+    padding: 10px 12px;
+    border-radius: 5px;
+    border: none;
+    font-size: 13px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.grn-form select {
+    background-color: #fff;
+    color: #000;
+}
+
+.label {
+    font-weight: 600;
+    margin-top: 8px;
+    margin-bottom: 3px;
+    color: #FF9800;
+    font-size: 13px;
+}
+
+.po-select {
+    font-size: 13px;
+    min-height: 140px;
+    background-color: #fff;
+    color: #000;
+    border-radius: 5px;
+}
+
+.po-details {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    padding: 7px 10px;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    min-height: 38px;
+    font-size: 13px;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.form-buttons button {
+    flex: 1;
+    font-size: 13px;
+    padding: 8px 0;
+}
+
+.btn.submit {
+    background-color: #FF9800;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn.submit:hover {
+    background-color: #e67e22;
+}
+
+.btn.cancel {
+    background-color: #888;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn.cancel:hover {
+    background-color: #555;
+}
+
+.search-row {
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.search-input {
+    width: 100%;
+    padding: 9px 11px;
+    border-radius: 5px;
+    border: none;
+    font-size: 13px;
+}
+
+.success-message {
+    max-width: 450px;
+    margin: 9px auto;
+    padding: 11px 14px;
+    background-color: #e6ffed;
+    color: #0b6b2d;
+    border: 1px solid #9de3b8;
+    border-left: 5px solid #36b37e;
+    border-radius: 7px;
+    box-shadow: 0 5px 15px rgba(8, 77, 44, 0.06);
+    font-weight: 600;
+    text-align: center;
+    font-size: 13px;
+    animation: slideDownFade 0.5s ease-out;
+}
+
+@keyframes slideDownFade {
+    from { transform: translateY(-6px); opacity: 0 }
+    to { transform: translateY(0); opacity: 1 }
+}
+
+.success-message.hide {
+    animation: fadeOut 0.6s forwards;
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; transform: translateY(-6px); height: 0; margin: 0; padding-top: 0; padding-bottom: 0 }
+}
+
+@media (max-width: 500px) {
+    .container { padding: 15px; }
+    h1 { font-size: 22px; }
+    p { font-size: 12px; }
+    .grn-form input,
+    .grn-form select,
+    .grn-form button,
+    .search-input { font-size: 11px; padding: 6px 8px; }
+    .po-select { min-height: 120px; font-size: 12px; }
+    .po-details { font-size: 12px; }
+    .form-buttons { flex-direction: column; gap: 6px; }
+}

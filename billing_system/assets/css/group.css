@@ -1,0 +1,174 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  display: flex;
+  /* font-family: "Outfit", sans-serif; */
+}
+body.dark-mode {
+  background-color: #3b3b3b;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  color: #f1f1f1;
+}
+.dark-mode .card {
+  background-color: #1e1e1e;
+  border-color: #333;
+  color: white;
+}
+.dark-mode .sidebar ul li a {
+  color: white;
+}
+.dark-mode .sidebar ul li a.active {
+  border-right: solid;
+  border-color: yellow;
+  background-color: rgba(167, 163, 163, 0.3);
+}
+.dark-mode .sidebar ul li a:hover {
+  border-right: solid;
+  border-color: yellow;
+  background-color: rgba(167, 163, 163, 0.3);
+}
+
+.dark-mode .btn-outline-light {
+  border-color: #f1f1f1;
+  color: #f1f1f1;
+}
+#darkModeToggle {
+  background-color: #f8f9fa; /* Light gray */
+  color: #212529; /* Dark text */
+  border: 1px solid #ced4da;
+  transition: all 0.3s ease;
+}
+body.dark-mode #darkModeToggle {
+  background-color: #333;
+  color: #f1f1f1;
+  border: 1px solid #f1f1f1;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.2);
+
+  div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 200px;
+
+    h5 {
+      text-align: center;
+      margin: 0;
+    }
+  }
+}
+.sidebar {
+  /* background-color: rgba(61, 59, 59, 0.08); */
+  height: 100vh;
+  padding: 20px;
+  width: 400px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+  h2 {
+    margin-bottom: 40px;
+    font-size: 28px;
+  }
+
+  ul {
+    list-style: none;
+    text-decoration: none;
+    /* gap: 10px; */
+    padding: 0;
+    margin: 0;
+    text-align: start;
+
+    li a {
+      text-decoration: none;
+      color: black;
+
+      gap: 10px;
+      margin-bottom: 20px;
+      display: block;
+      padding: 10px 0px 10px 20px;
+      border-radius: 10px;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    li a:hover {
+      border-right: solid;
+      border-color: blue;
+      background-color: rgba(167, 163, 163, 0.3);
+    }
+    li a.active {
+      border-right: solid;
+      border-color: blue;
+      background-color: rgba(167, 163, 163, 0.3);
+    }
+  }
+}
+.content {
+  width: 100%;
+
+  display: block;
+
+  .container {
+    padding: 20px;
+    background-image: url(/assets/hotel_room.jpg);
+    height: 89.7vh;
+  }
+
+  .head {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .formBtn {
+    margin-top: 10px;
+    display: flex;
+    gap: 5px;
+  }
+
+  .groupHead {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    align-items: center;
+
+    .group {
+      text-align: start;
+      margin-left: 10px;
+    }
+
+    h5 {
+      margin: 0;
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  .summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 20px 0 0;
+  }
+
+  .col p,
+  h5 {
+    margin: 0;
+    text-align: start;
+    margin-left: 20px;
+  }
+}
