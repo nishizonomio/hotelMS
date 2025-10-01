@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../models/invoice.php';
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../models/payment.php';
 
 class InvoiceController
 {
@@ -98,11 +99,15 @@ class InvoiceController
 
         $invoiceTotal = $this->invoiceModel->getInvoiceTotal($invoice_id);
 
+        error_log("Invoice $invoice_id | Total: $invoiceTotal | Paid: $totalPaid");
+
         $newStatus = "unpaid";
         if ($totalPaid >= $invoiceTotal) {
             $newStatus = "paid";
         } elseif ($totalPaid > 0 && $totalPaid < $invoiceTotal) {
             $newStatus = "partial";
+        } else {
+            $newStatus = "unpaid";
         }
 
         return $this->updateInvoiceStatus($invoice_id, $newStatus);

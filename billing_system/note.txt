@@ -1,0 +1,79 @@
+<!-- Refund Request Modal -->
+<div class="modal fade" id="refundModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="refundModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <form action="../routes/refund_action.php" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="refundModalLabel">Request Refund</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <!-- Paid Invoice Dropdown -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select class="form-select" name="payment_id" id="paymentSelect" required>
+                                    <option value="" disabled selected>Select Paid Invoice</option>
+                                    <?php foreach ($paidInvoices as $inv): ?>
+                                        <option value="<?= $inv['payment_id'] ?>">
+                                            <?= "INV" . str_pad($inv['invoice_id'], 4, '0', STR_PAD_LEFT) ?> 
+                                            - <?= htmlspecialchars($inv['guest_name']) ?>
+                                            (₱<?= number_format($inv['total_amount'], 2) ?>)
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <label for="paymentSelect">Paid Invoice</label>
+                            </div>
+                        </div>
+
+                        <!-- Refund Method -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select class="form-select" name="refund_method" required>
+                                    <option value="" disabled selected>Select Refund Method</option>
+                                    <option value="cash">Cash</option>
+                                    <option value="credit_card">Credit Card</option>
+                                    <option value="debit_card">Debit Card</option>
+                                    <option value="gcash">Gcash</option>
+                                    <option value="bank_transfer">Bank Transfer</option>
+                                </select>
+                                <label>Refund Method</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Refund Amount -->
+                    <div class="form-floating mb-3 mt-3">
+                        <input type="number" class="form-control" name="refund_amount" placeholder="Amount" step="0.01" required>
+                        <label>Amount</label>
+                    </div>
+
+                    <!-- Refund Reason -->
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" name="refund_reason" placeholder="Reason" style="height:100px;" required></textarea>
+                        <label>Reason</label>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="action" value="request" class="btn btn-primary">Submit Refund</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-6">
+                                        <div class="form-floating">
+                                            <select class="form-select" name="refund_method" required>
+                                                <option value="" disabled selected>Select Refund Method</option>
+                                                <option value="cash">Cash</option>
+                                                <option value="credit_card">Credit Card</option>
+                                                <option value="debit_card">Debit Card</option>
+                                                <option value="gcash">Gcash</option>
+                                                <option value="bank_transfer">Bank Transfer</option>
+                                            </select>
+                                            <label>Refund Method</label>
+                                        </div>
+                                    </div>

@@ -1,6 +1,42 @@
 <?php
+session_start();
 require_once __DIR__ . '/../controllers/InvoiceController.php';
 require_once __DIR__ . '/../controllers/PaymentController.php';
+
+$flashMessage = null;
+$flashType = "info";
+
+// Check if session-based flash exists
+if (isset($_SESSION['flash_message'])) {
+    $flashMessage = $_SESSION['flash_message'];
+    $flashType = $_SESSION['flash_type'] ?? "info";
+    unset($_SESSION['flash_message'], $_SESSION['flash_type']);
+}
+// Or check query string ?msg=
+elseif (isset($_GET['msg'])) {
+    switch ($_GET['msg']) {
+        case 'success':
+            $flashMessage = "✅ Payment successful!";
+            $flashType = "success";
+            break;
+        case 'cancelled':
+            $flashMessage = "⚠️ Payment cancelled. You may try again.";
+            $flashType = "warning";
+            break;
+        case 'failed':
+            $flashMessage = "❌ Payment failed. Please try again.";
+            $flashType = "danger";
+            break;
+        case 'pending':
+            $flashMessage = "⏳ Payment is pending confirmation.";
+            $flashType = "secondary";
+            break;
+        default:
+            $flashMessage = "ℹ️ " . htmlspecialchars($_GET['msg']);
+            $flashType = "info";
+    }
+}
+
 
 $invoiceController = new InvoiceController();
 $response = $invoiceController->getInvoicesByStatus('unpaid');
@@ -56,6 +92,30 @@ $recentPayments = $paymentController->getRecentPayments();
 </head>
 
 <body>
+    <?php if ($flashMessage): ?>
+        <div class="position-fixed top-0 end-0 p-3" style="z-index: 1060">
+            <div id="liveToast" class="toast align-items-center text-bg-<?php echo $flashType; ?> border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <?php echo $flashMessage; ?>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const toastEl = document.getElementById("liveToast");
+                if (toastEl) {
+                    const toast = new bootstrap.Toast(toastEl, {
+                        delay: 4000
+                    });
+                    toast.show();
+                }
+            });
+        </script>
+    <?php endif; ?>
+
     <aside class="sidebar">
         <h2>Billing System</h2>
         <nav>
@@ -72,14 +132,14 @@ $recentPayments = $paymentController->getRecentPayments();
                 <li>
                     <a href="refund.php"><i class="fa-solid fa-rotate-left"></i> Refund</a>
                 </li>
-                <li>
+                <!-- <li>
                     <a href="groupBilling.php"><i class="fa-solid fa-user-group"></i> Group Billing</a>
-                </li>
+                </li> -->
                 <li>
                     <a href="folio.php"><i class="fa-solid fa-folder"></i> Folio Management</a>
                 </li>
                 <li>
-                    <a href="../homepage/index.php"><i class="fa-solid fa-arrow-left"></i> Back</a>
+                    <a href="/../hotel/homepage/index.php"><i class="fa-solid fa-arrow-left"></i> Back</a>
                 </li>
             </ul>
         </nav>
@@ -243,16 +303,7 @@ $recentPayments = $paymentController->getRecentPayments();
                 <h3>Recent Payment</h3>
                 <?php if (!empty($recentPayments)): ?>
                     <?php foreach ($recentPayments as $payment): ?>
-                        <?php
-                        $statusClasses = [
-                            'succeeded' => 'success',
-                            'failed' => 'danger',
-                            'cancelled' => 'warning', // 🟡 new status
-                            'pending' => 'secondary' // fallback for pending
-                        ];
 
-                        $badgeClass = $statusClasses[$payment['status']] ?? 'secondary';
-                        ?>
                         <div class="cont d-flex justify-content-between align-items-center mb-3">
                             <div class="name d-flex align-items-center">
                                 <i class="fa-solid fa-user fa-lg me-2"></i>
@@ -264,7 +315,7 @@ $recentPayments = $paymentController->getRecentPayments();
                             <div class="price text-end">
                                 <h6>₱<?= number_format($payment['amount_paid'], 2); ?></h6>
                                 <p>
-                                    <span class="badge text-bg-<?= $badgeClass; ?>">
+                                    <span class="badge text-bg-<?= $payment['status'] === 'succeeded' ? 'success' : ($payment['status'] === 'failed' ? 'danger' : 'secondary'); ?>">
                                         <?= ucfirst($payment['status']); ?>
                                     </span>
 

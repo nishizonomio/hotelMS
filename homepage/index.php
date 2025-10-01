@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title> Hotel La Vista </title>
@@ -8,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
   <div class="overlay">
     <div class="container">
@@ -29,7 +31,7 @@
           <i class="fas fa-cash-register"></i>
           <span>Point of Sale</span>
         </a>
-        <a href="billing.php" class="module">
+        <a href="../billing_system/views/billing.php" class="module">
           <i class="fas fa-file-invoice-dollar"></i>
           <span>Billing & Payments</span>
         </a>
@@ -61,4 +63,5 @@
     </div>
   </div>
 </body>
+
 </html>

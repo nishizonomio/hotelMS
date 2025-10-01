@@ -60,6 +60,18 @@ class Payments
         }
     }
 
+    public function getCancelledPaymentsById()
+    {
+        $stmt = $this->conn->prepare("
+        SELECT * FROM payments WHERE payment_id = ? AND status = 'cancelled'
+    ");
+        $stmt->bind_param("i", $payment_id);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return $result;
+    }
+
     public function updatePayment($payment_id, $payment_method, $amount_paid, $status = 'succeeded')
     {
         $stmt = $this->conn->prepare("
@@ -101,15 +113,30 @@ class Payments
     }
 
 
-    public function updatePaymentStatus($payment_id, $status, $gateway_reference = null)
+    public function updatePaymentStatus($payment_id, $status)
     {
         $stmt = $this->conn->prepare("
             UPDATE payments
-            SET status = ?, gateway_reference = ?
+            SET status = ?
             WHERE payment_id = ?
         ");
-        $stmt->bind_param("ssi", $status, $gateway_reference, $payment_id);
+        $stmt->bind_param("si", $status, $payment_id);
         return $stmt->execute();
+    }
+
+    public function getPaymentByStatus($status)
+    {
+        $stmt = $this->conn->prepare("SELECT p.*, i.invoice_id, CONCAT(g.first_name, ' ', g.last_name) AS guest_name
+        FROM payments p
+        LEFT JOIN invoices i ON p.invoice_id = i.invoice_id
+        LEFT JOIN bookings b ON i.booking_id = b.booking_id
+        LEFT JOIN guests g ON b.guest_id = g.guest_id
+        WHERE p.status = ?");
+        $stmt->bind_param("s", $status);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+        return $result;
     }
 
     public function getPaymentsById($payment_id)

@@ -17,6 +17,7 @@ body.dark-mode {
   border-color: #333;
   color: white;
 }
+
 .dark-mode .sidebar ul li a {
   color: white;
 }

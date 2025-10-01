@@ -85,7 +85,7 @@ if (!empty($response) && isset($response['success']) && $response['success']) {
                     <a href="folio.php"><i class="fa-solid fa-folder"></i> Folio Management</a>
                 </li>
                 <li>
-                    <a href="../homepage/index.php"><i class="fa-solid fa-arrow-left"></i> Back</a>
+                    <a href="/../hotel/homepage/index.php"><i class="fa-solid fa-arrow-left"></i> Back</a>
                 </li>
             </ul>
         </nav>

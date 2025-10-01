@@ -1,5 +1,5 @@
 <?php
-/*require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../config/env.php';
 require_once __DIR__ . '/../models/payment.php';
 require_once __DIR__ . '/../models/paymentGateway.php';
@@ -29,7 +29,7 @@ if (!$event || !isset($event['data'])) {
 $data       = $event['data'];
 $attributes = $data['attributes'] ?? [];
 $type       = $data['type'] ?? 'unknown';
-$gateway_id = $data['id'] ?? null;  
+$gateway_id = $data['id'] ?? null;
 $status     = $attributes['status'] ?? 'pending';
 
 
@@ -49,13 +49,13 @@ if ($gateway_id) {
         $localPaymentId = $result['payment_id'];
         $invoice_id     = $result['invoice_id'];
 
-        
+
         $amount = isset($attributes['amount']) ? $attributes['amount'] / 100 : 0;
 
-        
-        $paymentModel->updatePayment($localPaymentId, 'paymongo', $amount, $status);
 
-        
+        $paymentModel->updatePaymentStatus($localPaymentId, $status);
+
+
         $gatewayModel->createTransaction(
             $localPaymentId,
             "PayMongo",
@@ -66,38 +66,12 @@ if ($gateway_id) {
             $status
         );
 
-        
-        $invoiceController->updateInvoiceStatusFromPayments($invoice_id);
+
+        $updateResult = $invoiceController->updateInvoiceStatusFromPayments($invoice_id);
+        error_log("Webhook processed for invoice $invoice_id | status update: " . json_encode($updateResult));
     }
 }
 
 http_response_code(200);
-echo "Webhook processed"; */
-
-// webhooks/test_paymongo.php
-
-$payload = file_get_contents("php://input");
-$signatureHeader = $_SERVER['HTTP_PAYMONGO_SIGNATURE'] ?? '';
-$secret = "your_webhook_secret_here"; // use the one from PayMongo dashboard
-
-$expectedSignature = hash_hmac('sha256', $payload, $secret);
-
-file_put_contents(
-    __DIR__ . '/../logs/test_webhook.log',
-    "==== New Webhook Event ====" . PHP_EOL .
-        "Payload: " . $payload . PHP_EOL .
-        "Signature Header: " . $signatureHeader . PHP_EOL .
-        "Expected: " . $expectedSignature . PHP_EOL .
-        "Match? " . (hash_equals($expectedSignature, $signatureHeader) ? "YES" : "NO") . PHP_EOL .
-        PHP_EOL,
-    FILE_APPEND
-);
-
-if (!hash_equals($expectedSignature, $signatureHeader)) {
-    http_response_code(400);
-    echo "Invalid signature";
-    exit;
-}
-
-http_response_code(200);
-echo "Webhook received and verified!";
+echo "Webhook processed";
+exit;

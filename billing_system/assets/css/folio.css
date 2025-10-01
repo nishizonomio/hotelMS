@@ -120,6 +120,10 @@ header {
     padding: 20px;
     background-image: url(/assets/hotel_room.jpg);
     height: 89.7vh;
+
+    .card {
+      padding: 20px;
+    }
   }
 
   .folio-header {

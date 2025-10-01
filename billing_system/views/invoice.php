@@ -65,9 +65,9 @@ $bookings = $controller->getActiveBookings();
                 <li><a href="invoice.php" class="active"><i class="fa-solid fa-file-lines"></i> Invoice</a></li>
                 <li><a href="payments.php"><i class="fa-solid fa-wallet"></i> Payment</a></li>
                 <li><a href="refund.php"><i class="fa-solid fa-rotate-left"></i> Refund</a></li>
-                <li><a href="groupBilling.php"><i class="fa-solid fa-user-group"></i> Group Billing</a></li>
+                <!-- <li><a href="groupBilling.php"><i class="fa-solid fa-user-group"></i> Group Billing</a></li> -->
                 <li><a href="folio.php"><i class="fa-solid fa-folder"></i> Folio Management</a></li>
-                <li><a href="../homepage/index.php"><i class="fa-solid fa-arrow-left"></i> Back</a></li>
+                <li><a href="/../hotel/homepage/index.php"><i class="fa-solid fa-arrow-left"></i> Back</a></li>
             </ul>
         </nav>
     </aside>
@@ -154,6 +154,7 @@ $bookings = $controller->getActiveBookings();
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="invoice.php?status=all">All</a></li>
                         <li><a class="dropdown-item" href="invoice.php?status=unpaid">Unpaid</a></li>
+                        <li><a class="dropdown-item" href="invoice.php?status=partial">Partial</a></li>
                         <li><a class="dropdown-item" href="invoice.php?status=paid">Paid</a></li>
                         <li><a class="dropdown-item" href="invoice.php?status=cancelled">Cancelled</a></li>
                         <li><a class="dropdown-item" href="invoice.php?status=refunded">Refunded</a></li>

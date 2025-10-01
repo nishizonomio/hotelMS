@@ -131,7 +131,7 @@ header {
 
   .container {
     padding: 20px;
-    background-image: url(/assets/hotel_room.jpg);
+    background-image: url(../hotel_room.jpg);
     height: 89.7vh;
   }
 

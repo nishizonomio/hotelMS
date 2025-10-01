@@ -70,31 +70,63 @@ class PaymentController
         ];
     }
 
+    public function retryPayment($payment_id, $method, $success_url, $cancel_url, $status)
+    {
+        // 1. Ask the model for the cancelled payment
+        $oldPayment = $this->model->getCancelledPaymentsById($payment_id);
 
-    public function processOnlinePayment($invoice_id, $amount_paid, $method, $success_url, $cancel_url)
+        if (!$oldPayment) {
+            return ["success" => false, "message" => "Payment not found or not cancelled."];
+        }
+
+        $invoice_id = $oldPayment['invoice_id'];
+        $amount     = $oldPayment['amount_paid'];
+
+        // 2. Create a new payment entry
+        $newPayment = $this->model->createPayment(
+            $invoice_id,
+            $amount,
+            $method,
+            $oldPayment['group_billing_id'] ?? null,
+            $oldPayment['gateway_name'] ?? null,
+            null,
+            $status
+        );
+
+        // 3. Process via gateway
+        if (in_array($method, ['gcash', 'paymaya'])) {
+            return $this->createPayMongoCheckoutSession($invoice_id, $amount, $method, $success_url, $cancel_url, $status);
+        } elseif (in_array($method, ['credit_card', 'debit_card'])) {
+            return $this->createStripeCheckoutSession($invoice_id, $amount, $method, $success_url, $cancel_url, $status);
+        }
+
+        return ["success" => false, "message" => "Unsupported method: $method"];
+    }
+
+
+
+    public function processOnlinePayment($invoice_id, $amount_paid, $payment_method, $success_url, $cancel_url, $status)
     {
 
         $success_url .= (strpos($success_url, '?') === false ? '?' : '&') . "invoice_id=" . $invoice_id;
         $cancel_url  .= (strpos($cancel_url, '?') === false ? '?' : '&') . "invoice_id=" . $invoice_id;
-        if (in_array($method, ['gcash'])) {
-            return $this->createPayMongoCheckoutSession($invoice_id, $amount_paid, $success_url, $cancel_url);
-        } elseif (in_array($method, ['credit_card', 'debit_card'])) {
-            return $this->createStripeCheckoutSession($invoice_id, $amount_paid, $success_url, $cancel_url);
+        if (in_array($payment_method, ['gcash'])) {
+            return $this->createPayMongoCheckoutSession($invoice_id, $amount_paid, $payment_method, $success_url, $cancel_url, $status);
+        } elseif (in_array($payment_method, ['credit_card', 'debit_card'])) {
+            return $this->createStripeCheckoutSession($invoice_id, $amount_paid, $payment_method, $success_url, $cancel_url, $status);
         }
-        return ["success" => false, "message" => "Unsupported method: $method"];
+        return ["success" => false, "message" => "Unsupported method: $payment_method"];
     }
 
-    private function createPayMongoCheckoutSession($invoice_id, $amount_paid, $success_url, $cancel_url)
+    private function createPayMongoCheckoutSession($invoice_id, $amount_paid, $payment_method, $success_url, $cancel_url, $status)
     {
-        $secretKey = $_ENV['PAYMONGO_SECRET_KEY']; // move to env later
+        $secretKey = $_ENV['PAYMONGO_SECRET_KEY'];
         $amount_cents = $amount_paid * 100;
 
         $payment = $this->model->createPayment(
             $invoice_id,
             $amount_paid,
-            'paymongo',
-            null,
-            'PayMongo',
+            $payment_method,
             null,
             'pending'
         );
@@ -125,20 +157,9 @@ class PaymentController
             ])
         ]);
 
-        // $response = json_decode(curl_exec($ch), true);
-        // curl_close($ch);
-
-        $responseRaw = curl_exec($ch);
-        $response = json_decode($responseRaw, true);
+        $response = json_decode(curl_exec($ch), true);
         curl_close($ch);
 
-        if (!$response || isset($response['errors'])) {
-            return [
-                "success" => false,
-                "message" => "PayMongo API Error",
-                "debug"   => $responseRaw // raw JSON for debugging
-            ];
-        }
 
         $gateway_transaction_id = $response['data']['id'] ?? null;
         $checkout_url = $response['data']['attributes']['checkout_url'] ?? null;
@@ -150,18 +171,15 @@ class PaymentController
             "200",
             "Checkout created",
             json_encode($response),
-            "pending"
+            $status
         );
 
-        // if (!$checkout_url) {
-        //     return ["success" => false, "message" => "Failed to create PayMongo checkout session."];
-        // }
 
 
         return ["success" => (bool)$checkout_url, "checkout_url" => $checkout_url];
     }
 
-    private function createStripeCheckoutSession($invoice_id, $amount, $success_url, $cancel_url)
+    private function createStripeCheckoutSession($invoice_id, $amount, $payment_method, $success_url, $cancel_url, $status)
     {
         require_once __DIR__ . '/../vendor/autoload.php';
         \Stripe\Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']); // move to env later
@@ -194,10 +212,8 @@ class PaymentController
         $payment = $this->model->createPayment(
             $invoice_id,
             $amount,
-            'credit_card',
+            $payment_method,
             null,
-            'Stripe',
-            $session->id,
             'pending'
         );
 
@@ -208,7 +224,7 @@ class PaymentController
             "200",
             "Checkout created",
             json_encode($session),
-            "pending"
+            $status
         );
 
         if (empty($session->url)) {
@@ -224,7 +240,10 @@ class PaymentController
         return $this->model->updatePaymentStatusByInvoice($invoice_id, $status);
     }
 
-
+    public function getPaymentByStatus($status)
+    {
+        return $this->model->getPaymentByStatus($status);
+    }
 
     // controllers/PaymentController.php
     public function getRecentPayments($limit = 5)
@@ -259,10 +278,4 @@ class PaymentController
     {
         return $this->model->getByGuest($guestId);
     }
-
-    // Simulate and log a gateway transaction only
-    // public function handlePayment($method, $amount_paid, $reference, $paymentId)
-    // {
-    //     return $this->gateway->processPayment($method, $amount_paid, $reference, $paymentId, $this->conn);
-    // }
 }
