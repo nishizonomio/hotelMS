@@ -1,0 +1,120 @@
+html, body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: url('/hotel/homepage/hotel_room.jpg') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+}
+
+.overlay {
+    background-color: rgba(0,0,0,0.88);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    background-color: rgba(255,255,255,0.1);
+    padding: 30px 25px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px);
+}
+
+header h1 {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 32px;
+    font-weight: 600;
+    color: #FF9800;
+}
+
+header p {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 16px;
+    color: #ccc;
+}
+
+.add-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.add-form input,
+.add-form select,
+.add-form button {
+    padding: 12px 14px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.add-form select {
+    background-color: #fff;
+    color: #000;
+}
+
+.add-form input[readonly] {
+    background-color: #ddd;
+    color: #555;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.form-buttons button {
+    flex: 1;
+    padding: 12px 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.form-buttons .cancel-btn {
+    background-color: #888;
+    color: #fff;
+}
+
+.form-buttons .cancel-btn:hover {
+    background-color: #555;
+}
+
+.add-form button[type="submit"] {
+    background-color: #FF9800;
+    color: #fff;
+}
+
+.add-form button[type="submit"]:hover {
+    background-color: #e67e22;
+}
+
+.error-message {
+    background-color: rgba(255, 0, 0, 0.2);
+    color: #fff;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+    }
+    .form-buttons {
+        flex-direction: column;
+    }
+}

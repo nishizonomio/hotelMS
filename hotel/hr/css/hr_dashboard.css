@@ -1,0 +1,143 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  font-family: 'Outfit', sans-serif;
+  background: url('../image/hotel_room.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+.overlay {
+  background: rgba(0, 0, 0, 0.65);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 1100px;
+  width: 100%;
+  text-align: center;
+  color: #f5f5dc;
+}
+
+header h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  color: #f5f5dc;
+}
+
+header p {
+  font-size: 1.1rem;
+  opacity: 0.85;
+  margin-bottom: 50px;
+  color: #eee;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.module {
+  background: rgba(128, 0, 0, 0.85);
+  padding: 18px;
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  text-decoration: none;
+  color: #f5f5dc;
+  border: 1px solid rgba(245, 245, 220, 0.25);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease;
+}
+
+.module:hover {
+  background: rgba(128, 0, 0, 0.95);
+  transform: translateY(-5px) scale(1.03);
+}
+
+.module i {
+  font-size: 28px;
+  margin-bottom: 10px;
+  display: block;
+  color: #f5f5dc;
+}
+
+.module span {
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+  }
+
+  header h1 {
+    font-size: 2.2rem;
+  }
+
+  header p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  header h1 {
+    font-size: 1.8rem;
+  }
+
+  header p {
+    font-size: 0.95rem;
+  }
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 25px;
+  background-color: #f5f5dc;
+  color: #800000;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: all 0.3s ease;
+  margin-top: 30px;
+}
+
+.back-btn i {
+  margin-right: 8px;
+  font-size: 1rem;
+}
+
+.back-btn:hover {
+  background-color: #eee;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.35);
+}
+
+.back-btn-container {
+  text-align: center;
+}

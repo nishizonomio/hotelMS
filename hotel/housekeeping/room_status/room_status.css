@@ -1,0 +1,163 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  font-family: 'Outfit', sans-serif;
+  background: url('/hotel/homepage/hotel_room.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+.overlay {
+  background: rgba(0, 0, 0, 0.65);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 1200px;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+header p {
+  font-size: 1.1rem;
+  opacity: 0.85;
+  margin-bottom: 40px;
+}
+
+/* ✅ New container for chart + table */
+.status-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 40px;
+  
+}
+
+.chart-section {
+  background: rgba(20, 20, 20, 0.9); /* ✅ Darker container */
+  padding: 20px;
+  border-radius: 12px;
+  width: 350px;
+  text-align: center;
+  color: #fff; /* ✅ White text for contrast */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6); /* subtle shadow */
+  border: 1px solid rgba(255, 255, 255, 0.1); /* thin light border */
+}
+
+.chart-label {
+  margin-top: 15px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #ffd700; /* gold highlight */
+}
+
+.table-section {
+  flex: 1;
+  min-width: 500px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 20px;
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+}
+
+/* Table styling */
+.status-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #fff;
+}
+
+.status-table th, .status-table td {
+  padding: 12px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+}
+
+.status-table th {
+  background: rgba(255,255,255,0.15);
+  font-weight: 600;
+}
+
+.status-table tr:nth-child(even) {
+  background: rgba(255,255,255,0.05);
+}
+
+.status-badge {
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-badge.dirty {
+  background: #ffc107;
+  color: #000;
+}
+
+.no-data {
+  font-size: 1.1rem;
+  opacity: 0.8;
+}
+
+.back-btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.back-btn:hover {
+  background: rgba(255,255,255,0.25);
+}
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.status-badge.available {
+  background-color: #28a745; /* green */
+}
+
+.status-badge.reserved {
+  background-color: #6f42c1; /* purple */
+}
+
+.status-badge.occupied {
+  background-color: #dc3545; /* red */
+}
+.status-badge.under-maintenance {
+  background-color: #007bff; /* blue */
+}
+
+.status-badge.dirty {
+  background-color: #ffc107;
+  color: #000; /* black text para readable sa yellow */
+}
+

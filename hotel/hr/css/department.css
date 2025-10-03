@@ -1,0 +1,154 @@
+body, html {
+  font-family: 'Outfit', sans-serif;
+  background: #f5f0e6;
+  color: #333;
+  min-height: 100vh;
+}
+
+h1 {
+  text-align: center;
+  color: #800000;
+  margin-bottom: 30px;
+}
+
+.back-btn {
+  display: inline-block;
+  margin-bottom: 20px;
+  text-decoration: none;
+  background: #800000;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.back-btn:hover {
+  background: #a52a2a;
+}
+
+.chart-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.org {
+  padding-top: 20px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.org ul {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+  position: relative;
+}
+
+.org li {
+  list-style-type: none;
+  text-align: center;
+  margin: 0 20px;
+  position: relative;
+}
+
+.org li::before,
+.org li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 50%;
+  border-top: 2px solid #800000;
+  width: 50%;
+  height: 20px;
+}
+
+.org li::after {
+  right: auto;
+  left: 50%;
+  border-left: 2px solid #800000;
+}
+
+.org li:only-child::before,
+.org li:only-child::after {
+  content: none;
+}
+
+.org li:only-child {
+  padding-top: 0;
+}
+
+.org li:first-child::before,
+.org li:last-child::after {
+  border: none;
+}
+
+.org li:last-child::before {
+  border-right: 2px solid #800000;
+  border-radius: 0 5px 0 0;
+}
+
+.org li:first-child::after {
+  border-radius: 5px 0 0 0;
+}
+
+.box {
+  border: 2px solid #800000;
+  border-radius: 8px;
+  padding: 10px;
+  background: #fff;
+  display: inline-block;
+  min-width: 120px;
+  margin-top: 40px;
+}
+
+.box img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 8px auto;
+  border: 2px solid #800000;
+}
+
+.initials {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #800000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 8px auto;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.position {
+  font-weight: bold;
+  color: #800000;
+  margin-bottom: 4px;
+}
+
+.name {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.edit-ceo-btn {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 6px 10px;
+  background: #800000;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.edit-ceo-btn:hover {
+  background: #a52a2a;
+}
