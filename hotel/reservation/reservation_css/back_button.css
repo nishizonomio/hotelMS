@@ -1,0 +1,56 @@
+.back-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: #111111;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+@keyframes borderRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.back-button::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, transparent, transparent, #ffd700);
+    z-index: -1;
+    animation: borderRotate 2s linear infinite;
+}
+
+.back-button:hover {
+    transform: scale(1.1);
+}
+
+.back-button:hover::before {
+    animation-duration: 1s;
+}
+
+.back-button img {
+    width: 24px;
+    height: 24px;
+    opacity: 0.6;
+    filter: invert(1);
+    transition: opacity 0.2s;
+}
+
+.back-button:hover img {
+    opacity: 0.8;
+}
+
+

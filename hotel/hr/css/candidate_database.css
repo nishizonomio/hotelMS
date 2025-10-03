@@ -1,0 +1,157 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: beige;
+    color: black;
+}
+
+.overlay {
+    padding: 20px;
+}
+
+header {
+    width: 100%;
+    background-color: #fff8f0;
+    border-bottom: 2px solid #800000;
+    padding: 20px 0;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #800000;
+}
+
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px 0;
+    justify-content: center;
+}
+
+nav a {
+    text-decoration: none;
+    background-color: #800000;
+    color: beige;
+    padding: 8px 15px;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    background-color: #a00000;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+th, td {
+    border: 2px solid #800000;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #fff8f0;
+    color: #800000;
+}
+
+td {
+    background-color: #fff8f0;
+    color: black;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #f9f0e6;
+}
+
+table tbody tr:hover {
+    background-color: #ffe5d6;
+}
+
+.status-pending { color: orange; font-weight: bold; }
+.status-passed { color: green; font-weight: bold; }
+.status-failed { color: red; font-weight: bold; }
+
+.rescheduleBtn, .scheduleBtn {
+    background-color: #800000;
+    color: beige;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.rescheduleBtn:hover, .scheduleBtn:hover {
+    background-color: #a00000;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.65);
+    padding: 40px 20px;
+}
+
+.modal-content {
+    background-color: #fff8f0;
+    margin: 5% auto;
+    padding: 20px;
+    border: 2px solid #800000;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    color: black;
+}
+
+.modal-content h3 {
+    color: #800000;
+    margin-top: 0;
+    text-align: center;
+}
+
+.modal-content input[type="datetime-local"],
+.modal-content input[type="text"],
+.modal-content input[type="email"] {
+    width: 97%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #800000;
+    border-radius: 6px;
+}
+
+.checkboxLabel {
+    display: block;
+    margin: 10px 0;
+}
+
+.close {
+    color: #800000;
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.successMsg {
+    background-color: #fff8f0;
+    border: 2px solid #800000;
+    padding: 10px 15px;
+    border-radius: 10px;
+    color: black;
+    margin-bottom: 20px;
+    text-align: center;
+}

@@ -1,0 +1,122 @@
+body, html {
+    font-family: 'Outfit', sans-serif;
+    background: url('/hotel/kitchen/image/hotel_room.jpg') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    color: beige;
+}
+
+.overlay {
+    background-color: rgba(245, 245, 220, 0.85);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 0;
+}
+
+.container {
+    background: #1A237E;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    width: 600px;
+    max-width: 95%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    color: beige;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 26px;
+    text-align: center;
+}
+
+header p {
+    text-align: center;
+}
+
+.message {
+    background-color: rgba(245, 240, 220, 0.9);
+    color: #1A237E;
+    border-radius: 8px;
+    padding: 12px 18px;
+    text-align: center;
+    margin: 15px 0;
+}
+
+.add-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.add-form label {
+    font-weight: 500;
+}
+
+.add-form input,
+.add-form textarea,
+.add-form select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+    color: #1A237E;
+}
+
+.add-form input::placeholder,
+.add-form textarea::placeholder {
+    color: #555;
+}
+
+.button-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.button-row button,
+.button-row .cancel-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.button-row button {
+    background-color: #f5f0e6;
+    color: #1A237E;
+}
+
+.button-row button:hover {
+    background-color: #e0d8c0;
+}
+
+.button-row .cancel-btn {
+    display: inline-block;
+    background-color: #f5f0e6;
+    color: #1A237E;
+    text-decoration: none;
+    line-height: 1.2;
+}
+
+.button-row .cancel-btn:hover {
+    background-color: #e0d8c0;
+}
+
+i.fas {
+    margin-right: 6px;
+}

@@ -1,0 +1,104 @@
+body, html {
+    font-family: 'Outfit', sans-serif;
+    background: url('/hotel/kitchen/image/hotel_room.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+.overlay {
+    background-color: rgba(245, 245, 220, 0.85);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 0;
+}
+
+.container {
+    background: #1A237E;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    width: 600px;
+    max-width: 95%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    color: #f5f0e6;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 26px;
+    color: #f5f0e6;
+    text-align: center;
+}
+
+.message {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    padding: 12px 18px;
+    border-radius: 8px;
+    margin: 15px 0;
+    text-align: center;
+}
+
+.add-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.add-form input, 
+.add-form textarea, 
+.add-form select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+    color: #1A237E;
+}
+
+.add-form button, 
+.action-btn {
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border: none;
+    background-color: #f5f0e6;
+    color: #1A237E;
+}
+
+.add-form button:hover, 
+.action-btn:hover, 
+.module.back.cancel-btn:hover {
+    background-color: #e0d8c0;
+}
+
+.module.back.cancel-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    background-color: #f5f0e6;
+    color: #1A237E;
+    text-align: center;
+}
+
+i.fas {
+    margin-right: 6px;
+}

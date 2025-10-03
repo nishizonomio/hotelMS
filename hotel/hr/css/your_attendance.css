@@ -1,0 +1,84 @@
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: #f5f0e6;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.back-button {
+  display: inline-block;
+  width: 100px;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  color: #800000;
+  padding: 6px 0;
+  border: 1px solid #800000;
+  border-radius: 6px;
+  background: #fff4e6;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background: #800000;
+  color: #fff;
+  transform: translateY(-1px);
+}
+h1 {
+    text-align: center;
+    color: #800000;
+    margin-bottom: 30px;
+}
+
+.card {
+    background-color: #fff8f0;
+    border: 2px solid #800000;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+}
+
+.card h2 {
+    color: #800000;
+    margin-bottom: 15px;
+}
+
+.card p {
+    margin: 8px 0;
+    font-size: 16px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+table th, table td {
+    border: 1px solid #800000;
+    padding: 8px;
+    text-align: center;
+}
+
+table th {
+    background-color: #f5e0d6;
+    color: #800000;
+}
+
+.today-row {
+    background-color: #ffe6e6;
+}
+
+p {
+    color: #333;
+}

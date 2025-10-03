@@ -1,0 +1,72 @@
+/* Unified Container Style */
+.container, .dashboard-container {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    width: 95%;
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.8s ease-out;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    color: #ffffff;
+}
+
+th {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Form Elements */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="tel"],
+input[type="datetime-local"],
+select,
+textarea {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    padding: 10px;
+    color: #ffffff;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* Buttons */
+button,
+input[type="submit"] {
+    background: #ffd700;
+    color: #000000;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container, .dashboard-container {
+        margin: 10px;
+        padding: 20px;
+    }
+}

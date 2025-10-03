@@ -1,0 +1,182 @@
+body, html {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: url('/hotel/homepage/hotel_room.jpg') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+}
+
+.overlay {
+    background-color: rgba(0,0,0,0.88);
+    min-height: 100vh;
+    padding: 40px 20px;
+    box-sizing: border-box;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 32px;
+    font-weight: 600;
+}
+
+p {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 16px;
+    color: #ccc;
+}
+
+.search-container {
+    width: 95%;
+    margin: 0 auto 20px;
+    text-align: center;
+}
+
+.search-form {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-form input,
+.search-form select,
+.search-form button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+}
+
+.search-form input {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+}
+
+.search-form input::placeholder {
+    color: #ddd;
+}
+
+.search-form button {
+    background: #FF9800;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.search-form button:hover { 
+    background: #e67e22; 
+}
+
+table {
+    margin: 20px auto;
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 95%;
+    background: #23272f;
+    color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 18px rgba(0,0,0,0.15);
+    opacity: 0.95;
+}
+
+th, td {
+    padding: 14px 12px;
+    text-align: center;
+    font-size: 15px;
+    border: none;
+}
+
+th {
+    background: #303642;
+    font-weight: 700;
+    font-size: 16px;
+    color: #FF9800;
+}
+
+tr:hover td {
+    background: #2e3440;
+    transition: background 0.2s;
+}
+
+.add-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.add-form input, .add-form select, .add-form button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+}
+
+.add-form button {
+    background-color: #FF9800;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.add-form button:hover { 
+    background-color: #e67e22; 
+}
+
+@media (max-width: 900px) {
+    table, thead, tbody, th, td, tr { display: block; }
+    thead { display: none; }
+    tr { background: #222; margin-bottom: 10px; border-radius: 12px; box-shadow: 0 1px 6px rgba(0,0,0,0.08); }
+    td { text-align: right; padding-left: 50%; position: relative; }
+    td:before { 
+        position: absolute; 
+        left: 16px; 
+        top: 16px; 
+        white-space: nowrap; 
+        font-weight: bold; 
+        color: #FF9800; 
+        content: attr(data-label); 
+        font-size: 14px; 
+        text-align: left; 
+    }
+}
+.edit-btn,
+.delete-btn {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin: 2px 0;
+    width: 80px;
+}
+
+.edit-btn {
+    background-color: #FF9800;
+    color: #fff;
+}
+
+.edit-btn:hover {
+    background-color: #e67e22;
+}
+
+.delete-btn {
+    background-color: #888;
+    color: #fff;
+}
+
+.delete-btn:hover {
+    background-color: #555;
+}
+
+td[data-label="Actions"] {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+}
