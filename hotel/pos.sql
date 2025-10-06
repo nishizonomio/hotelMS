@@ -1,221 +1,212 @@
-CREATE TABLE `lounge_orders` (
-  `order_id` int(11) NOT NULL,
-  `guest_id` int(11) NOT NULL,
-  `table_number` varchar(10) DEFAULT NULL,
-  `item` varchar(255) NOT NULL,
-  `order_type` enum('dine_in','takeaway') DEFAULT 'dine_in',
-  `total_amount` decimal(10,2) NOT NULL,
-  `order_date` timestamp NOT NULL DEFAULT current_timestamp(),
-  `status` enum('pending','preparing','ready','served','cancelled') DEFAULT 'pending',
-  `staff_id` int(11) NOT NULL,
-  `notes` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
-CREATE TABLE `lounge_order_items` (
+CREATE TABLE `guest_billing` (
   `id` int(11) NOT NULL,
+  `guest_id` int(11) DEFAULT NULL,
+  `guest_name` varchar(255) DEFAULT NULL,
+  `order_type` enum('Restaurant','Mini Bar','Lounge Bar','Gift Store','Room Service') DEFAULT NULL,
+  `item_name` varchar(255) DEFAULT NULL,
   `order_id` int(11) NOT NULL,
-  `item_name` varchar(255) NOT NULL,
-  `category` enum('Beverages','Cocktails','Appetizers','Main Course','Desserts','Snacks') NOT NULL,
-  `quantity` int(11) NOT NULL,
-  `unit_price` decimal(10,2) NOT NULL,
-  `total_price` decimal(10,2) NOT NULL,
-  `special_instructions` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci; 
-
-
-
-
-
-CREATE TABLE `room_dining_orders` (
-  `order_id` int(11) NOT NULL,
-  `guest_id` int(11) NOT NULL,
-  `room_number` varchar(10) NOT NULL,
-  `order_type` enum('breakfast','lunch','dinner','snacks','beverages') NOT NULL,
   `total_amount` decimal(10,2) NOT NULL,
-  `order_date` timestamp NOT NULL DEFAULT current_timestamp(),
-  `delivery_time` datetime DEFAULT NULL,
-  `status` enum('pending','preparing','out_for_delivery','delivered','cancelled') DEFAULT 'pending',
-  `staff_id` int(11) NOT NULL,
-  `special_instructions` text DEFAULT NULL,
-  `delivery_notes` text DEFAULT NULL
+  `payment_option` enum('Paid','To be billed') NOT NULL,
+  `payment_method` varchar(50) DEFAULT NULL,
+  `partial_payment` decimal(10,2) DEFAULT 0.00,
+  `remaining_amount` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
-CREATE TABLE `room_dining_order_items` (
-  `id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `item_name` varchar(255) NOT NULL,
-  `category` enum('Breakfast','Lunch','Dinner','Snacks','Beverages','Desserts') NOT NULL,
-  `quantity` int(11) NOT NULL,
-  `unit_price` decimal(10,2) NOT NULL,
-  `total_price` decimal(10,2) NOT NULL,
-  `special_instructions` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
-
-
-
-
-
-CREATE TABLE `restaurant_orders` (
-  `order_id` int(11) NOT NULL,
-  `guest_id` int(11) NOT NULL,
-  `table_number` varchar(10) DEFAULT NULL,
-  `order_type` enum('dine_in','takeaway','buffet') DEFAULT 'dine_in',
-  `total_amount` decimal(10,2) NOT NULL,
-  `order_date` timestamp NOT NULL DEFAULT current_timestamp(),
-  `status` enum('pending','preparing','ready','served','cancelled') DEFAULT 'pending',
-  `staff_id` int(11) NOT NULL,
-  `notes` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 
 --
--- Table structure for table `restaurant_order_items`
+-- Dumping data for table `guest_billing`
 --
 
-CREATE TABLE `restaurant_order_items` (
-  `id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `item_name` varchar(255) NOT NULL,
-  `category` enum('Appetizers','Main Course','Desserts','Beverages','Sides','Others') NOT NULL,
-  `quantity` int(11) NOT NULL,
-  `unit_price` decimal(10,2) NOT NULL,
-  `total_price` decimal(10,2) NOT NULL,
-  `special_instructions` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `guest_billing` (`id`, `guest_id`, `guest_name`, `order_type`, `item_name`, `order_id`, `total_amount`, `payment_option`, `payment_method`, `partial_payment`, `remaining_amount`, `created_at`, `updated_at`) VALUES
+(304, 7, 'Charles Garcia', 'Room Service', 'Chicken Sopas', 4921, 180.00, 'To be billed', 'Card', 0.00, 180.00, '2025-10-03 22:22:47', '2025-10-03 22:22:47'),
+(305, 7, 'Charles Garcia', 'Room Service', 'Bulalo', 1973, 320.00, 'To be billed', 'Card', 0.00, 320.00, '2025-10-03 22:23:11', '2025-10-03 22:23:11'),
+(306, 5, 'Robert Brown', 'Room Service', 'Pancit Canton', 5991, 180.00, 'To be billed', 'Cash', 0.00, 180.00, '2025-10-03 22:26:06', '2025-10-03 22:26:06'),
+(307, 7, 'Charles Garcia', 'Room Service', 'Chicken Sopas, Pancit Canton', 3844, 360.00, 'To be billed', 'Cash', 0.00, 360.00, '2025-10-03 22:44:31', '2025-10-03 22:44:31'),
+(309, 5, 'Robert Brown', 'Room Service', 'Pancit Canton', 6320, 180.00, 'To be billed', 'Cash', 0.00, 180.00, '2025-10-03 22:46:50', '2025-10-03 22:46:50'),
+(311, 6, 'William Jones', 'Room Service', 'Bulalo, Chicken Sopas', 7832, 500.00, 'To be billed', 'Cash', 0.00, 500.00, '2025-10-03 22:58:05', '2025-10-03 22:58:05'),
+(313, 2, 'Michael Smith', 'Restaurant', 'Pancit Canton, Chicken Sopas', 9066, 360.00, 'Paid', 'GCash', 60.00, 300.00, '2025-10-03 22:59:58', '2025-10-03 22:59:58'),
+(314, 3, 'David Johnson', 'Restaurant', 'Chicken Sopas', 6495, 180.00, 'To be billed', 'Cash', 0.00, 180.00, '2025-10-03 23:00:22', '2025-10-03 23:00:22'),
+(315, 15, 'Steven Taylor', 'Room Service', 'Chicken Sopas, Pancit Canton', 6848, 360.00, 'Paid', 'BillEase', 60.00, 300.00, '2025-10-03 23:02:08', '2025-10-03 23:02:08'),
+(316, 3, 'David Johnson', 'Restaurant', 'Pancit Canton, Pork Adobo', 2546, 400.00, 'To be billed', 'Cash', 0.00, 400.00, '2025-10-03 23:26:31', '2025-10-03 23:26:31'),
+(317, 3, 'David Johnson', 'Gift Store', 'Handmade Bracelet, Fridge Magnet Set', 5591, 480.00, 'To be billed', 'Cash', 0.00, 480.00, '2025-10-03 23:31:17', '2025-10-03 23:31:17'),
+(319, 2, 'Michael Smith', 'Gift Store', 'Fridge Magnet Set, Handmade Bracelet', 1081, 480.00, 'Paid', 'Cash', 22.00, 458.00, '2025-10-03 23:33:09', '2025-10-03 23:33:09'),
+(324, 2, 'Michael Smith', 'Gift Store', 'Fridge Magnet Set, Handmade Bracelet', 4035, 480.00, 'Paid', 'Cash', 80.00, 400.00, '2025-10-03 23:38:03', '2025-10-03 23:38:03'),
+(328, 4, 'James Williams', 'Gift Store', 'Handmade Bracelet, Fridge Magnet Set, Fragrant Candle', 6098, 830.00, 'To be billed', NULL, 0.00, 830.00, '2025-10-03 23:50:03', '2025-10-03 23:50:03'),
+(329, 4, 'James Williams', 'Gift Store', 'Ferrero Rocher Chocolate Box, Decorative Coasters', 4267, 400.00, 'Paid', 'GCash', 400.00, 0.00, '2025-10-03 23:50:18', '2025-10-03 23:50:18'),
+(331, 7, 'Charles Garcia', 'Gift Store', 'Decorative Coasters, Coffee Mug, Ferrero Rocher Chocolate Box, Mini Photo Frame, Local Snack Pack', 7458, 1170.00, 'Paid', 'GCash', 170.00, 1000.00, '2025-10-03 23:51:01', '2025-10-03 23:51:01'),
+(332, 4, 'James Williams', 'Restaurant', 'Pancit Canton, Pancit Bihon', 1359, 350.00, 'Paid', 'Cash', 50.00, 300.00, '2025-10-04 00:16:39', '2025-10-04 00:16:39'),
+(333, 4, 'James Williams', 'Room Service', 'Ferrero Rocher Chocolate Box, Local Snack Box, Pancit Canton, Fragrant Candle, Fridge Magnet Set', 6731, 1310.00, 'To be billed', 'Cash', 0.00, 1310.00, '2025-10-04 00:23:25', '2025-10-04 00:23:25'),
+(334, 5, 'Robert Brown', 'Room Service', 'Fridge Magnet Set, Handmade Bracelet, Miniature Figurine', 7076, 880.00, 'Paid', 'BillEase', 50.00, 830.00, '2025-10-04 00:28:29', '2025-10-04 00:28:29'),
+(335, 5, 'Robert Brown', 'Gift Store', 'Miniature Figurine, Fridge Magnet Set', 4185, 580.00, 'To be billed', NULL, 0.00, 580.00, '2025-10-04 00:28:58', '2025-10-04 00:28:58'),
+(336, 6, 'William Jones', 'Gift Store', 'Fragrant Candle, Fridge Magnet Set, Mini Photo Frame', 8988, 750.00, 'To be billed', NULL, 0.00, 750.00, '2025-10-04 00:29:44', '2025-10-04 00:29:44'),
+(337, 9, 'Christopher Hernandez', 'Gift Store', 'Decorative Coasters, Ferrero Rocher Chocolate Box', 5604, 400.00, 'To be billed', NULL, 0.00, 400.00, '2025-10-04 00:30:33', '2025-10-04 00:30:33'),
+(338, 6, 'William Jones', 'Gift Store', 'Fridge Magnet Set, Handmade Bracelet, Fragrant Candle', 9032, 830.00, 'To be billed', NULL, 0.00, 830.00, '2025-10-04 00:30:52', '2025-10-04 00:30:52'),
+(339, 9, 'Christopher Hernandez', 'Gift Store', 'Fridge Magnet Set, Fragrant Candle, Ferrero Rocher Chocolate Box', 6633, 780.00, 'Paid', 'GCash', 80.00, 700.00, '2025-10-04 00:32:44', '2025-10-04 00:32:44'),
+(340, 5, 'Robert Brown', 'Gift Store', 'Fridge Magnet Set, Fragrant Candle, Handmade Bracelet', 7929, 830.00, 'To be billed', NULL, 0.00, 830.00, '2025-10-04 00:38:22', '2025-10-04 00:38:22'),
+(341, 2, 'Michael Smith', 'Mini Bar', 'Cobra Energy Drink , Chips Ahoy! Chocolate Chip Cookies Snack Pack 38g, Lemonade Bottle', 1847, 270.00, 'To be billed', NULL, 0.00, 270.00, '2025-10-04 00:46:03', '2025-10-04 00:46:03'),
+(345, 3, 'David Johnson', 'Mini Bar', 'Cobra Energy Drink , Chips Ahoy! Chocolate Chip Cookies Snack Pack 38g', 5520, 190.00, 'To be billed', NULL, 0.00, 190.00, '2025-10-04 01:03:03', '2025-10-04 01:03:03'),
+(346, 7, 'Charles Garcia', 'Mini Bar', 'Beef Jerky, Arla Natural Cheese Mozzarella Cheese Slices, Growers Mixed Nuts, Ding Dong Snack Mix, Lays', 3550, 820.00, 'Paid', 'GCash', 100.00, 720.00, '2025-10-04 01:03:24', '2025-10-04 01:03:24'),
+(347, 8, 'Thomas Martinez', 'Mini Bar', 'Cobra Energy Drink , Chips Ahoy! Chocolate Chip Cookies Snack Pack 38g, Candy Pack', 2495, 240.00, 'To be billed', NULL, 0.00, 240.00, '2025-10-04 01:05:09', '2025-10-04 01:05:09'),
+(348, 2, 'Michael Smith', 'Mini Bar', 'Cobra Energy Drink , Chips Ahoy! Chocolate Chip Cookies Snack Pack 38g, Candy Pack', 1170, 240.00, 'Paid', 'GCash', 42.00, 198.00, '2025-10-04 01:06:09', '2025-10-04 01:06:09'),
+(355, 5, 'Robert Brown', 'Mini Bar', 'Cobra Energy Drink , Chips Ahoy! Chocolate Chip Cookies Snack Pack 38g', 6669, 190.00, 'Paid', 'Card', 92.00, 98.00, '2025-10-04 01:25:39', '2025-10-04 01:25:39'),
+(362, 5, 'Robert Brown', 'Lounge Bar', 'Cocktail - Mojito, Cocktail - Martini, Cocktail - Margarita', 8212, 870.00, 'To be billed', NULL, 0.00, 870.00, '2025-10-04 01:29:52', '2025-10-04 01:29:52'),
+(363, 7, 'Charles Garcia', 'Lounge Bar', 'Cocktail - Margarita, Jack Daniel\'s, Ginebra San Miguel Gin, Fruit Platter', 3739, 1260.00, 'Paid', 'GCash', 260.00, 1000.00, '2025-10-04 01:30:07', '2025-10-04 01:30:07'),
+(368, 5, 'Robert Brown', 'Restaurant', 'Pancit Bihon, Pancit Canton, Chicken Sopas, Bulalo', 1034, 850.00, 'To be billed', 'Cash', 0.00, 850.00, '2025-10-04 01:38:04', '2025-10-04 01:38:04'),
+(369, 20, 'Kevin Martin', 'Restaurant', 'Pancit Canton, Chicken Sopas', 7296, 360.00, 'Paid', 'Paymaya', 200.00, 160.00, '2025-10-04 02:09:29', '2025-10-04 02:09:29'),
+(370, 1, 'John Doe', 'Lounge Bar', 'Cocktail - Mojito, Cocktail - Martini, Cocktail - Margarita', 6221, 870.00, 'Paid', 'Card', 100.00, 770.00, '2025-10-04 02:11:12', '2025-10-04 02:12:28'),
+(372, 11, 'Matthew Gonzalez', 'Gift Store', 'Fridge Magnet Set, Fragrant Candle, Handmade Bracelet', 1689, 830.00, 'To be billed', NULL, 0.00, 830.00, '2025-10-04 02:12:09', '2025-10-04 02:12:09'),
+(373, 2, 'Michael Smith', 'Restaurant', 'Chicken Sopas, Bulalo', 1744, 500.00, 'Paid', 'Cash', 111.00, 389.00, '2025-10-04 02:18:45', '2025-10-04 02:18:45'),
+(374, 1, 'John Doe', 'Restaurant', 'Chicken Sopas', 3450, 180.00, 'To be billed', 'Cash', 0.00, 180.00, '2025-10-04 02:20:02', '2025-10-04 02:20:02'),
+(375, 6, 'William Jones', 'Restaurant', 'Pancit Bihon, Pancit Canton, Chicken Sopas', 8568, 530.00, 'Paid', 'GCash', 66.00, 464.00, '2025-10-04 02:21:59', '2025-10-04 02:21:59'),
+(376, 3, 'David Johnson', 'Restaurant', 'Pancit Bihon, Pancit Canton', 9457, 350.00, 'To be billed', 'Cash', 0.00, 350.00, '2025-10-04 02:22:28', '2025-10-04 02:22:28'),
+(377, 5, 'Robert Brown', 'Restaurant', 'Pancit Bihon, Pancit Canton', 7562, 350.00, 'To be billed', 'Cash', 0.00, 350.00, '2025-10-04 02:45:54', '2025-10-04 02:45:54'),
+(378, 3, 'David Johnson', 'Restaurant', 'Lechon Kawali', 3604, 260.00, 'To be billed', 'Cash', 0.00, 260.00, '2025-10-04 03:05:09', '2025-10-04 03:05:09'),
+(379, 1, 'John Doe', 'Restaurant', 'Sinigang na Baboy', 5556, 240.00, 'To be billed', 'Cash', 0.00, 240.00, '2025-10-04 03:11:52', '2025-10-04 03:11:52'),
+(382, 6, 'William Jones', 'Restaurant', 'Pancit Canton', 3690, 360.00, 'Paid', 'GCash', 60.00, 300.00, '2025-10-04 12:39:32', '2025-10-04 12:39:32'),
+(390, 4, 'James Williams', 'Gift Store', 'Fridge Magnet Set, Fragrant Candle, Ferrero Rocher Chocolate Box', 4922, 780.00, 'To be billed', NULL, 0.00, 780.00, '2025-10-04 12:49:02', '2025-10-04 12:49:02'),
+(396, 2, 'Michael Smith', 'Gift Store', 'Miniature Figurine, Handmade Bracelet, Fridge Magnet Set', 7746, 880.00, 'Paid', 'Cash', 500.00, 380.00, '2025-10-04 12:58:16', '2025-10-04 12:58:16'),
+(397, 6, 'William Jones', 'Gift Store', 'Handmade Bracelet, Fridge Magnet Set, Fragrant Candle', 8252, 830.00, 'To be billed', NULL, 0.00, 830.00, '2025-10-04 12:58:30', '2025-10-04 12:58:30'),
+(398, 7, 'Charles Garcia', 'Gift Store', 'Fridge Magnet Set', 4918, 180.00, 'Paid', 'Cash', 80.00, 100.00, '2025-10-04 13:01:35', '2025-10-04 13:01:35'),
+(407, 2, 'Michael Smith', 'Gift Store', 'Handmade Bracelet, Miniature Figurine', 5136, 700.00, 'To be billed', NULL, 0.00, 700.00, '2025-10-04 13:11:00', '2025-10-04 13:11:00'),
+(408, 6, 'William Jones', 'Mini Bar', 'Chips Ahoy! Chocolate Chip Cookies Snack Pack 38g, Lipton Green Tea Lively Fresh , Candy Pack', 6565, 430.00, 'To be billed', NULL, 0.00, 430.00, '2025-10-04 13:12:31', '2025-10-04 13:12:31'),
+(409, 2, 'Michael Smith', 'Mini Bar', 'Cobra Energy Drink , Chips Ahoy! Chocolate Chip Cookies Snack Pack 38g, Candy Pack', 7213, 240.00, 'Paid', 'GCash', 40.00, 200.00, '2025-10-04 13:12:50', '2025-10-04 13:12:50'),
+(410, 5, 'Robert Brown', 'Gift Store', 'Fridge Magnet Set, Fragrant Candle', 5873, 530.00, 'To be billed', NULL, 0.00, 530.00, '2025-10-04 13:13:43', '2025-10-04 13:13:43'),
+(411, 5, 'Robert Brown', 'Mini Bar', 'Cobra Energy Drink ', 5532, 120.00, 'To be billed', NULL, 0.00, 120.00, '2025-10-04 13:14:11', '2025-10-04 13:14:11'),
+(412, 7, 'Charles Garcia', 'Gift Store', 'Fragrant Candle', 5959, 350.00, 'Paid', 'Card', 200.00, 150.00, '2025-10-04 13:14:32', '2025-10-04 13:14:32'),
+(417, 10, 'Daniel Lopez', 'Lounge Bar', 'Cocktail - Martini', 2175, 320.00, 'To be billed', NULL, 0.00, 320.00, '2025-10-04 13:17:51', '2025-10-04 13:17:51'),
+(418, 20, 'Kevin Martin', 'Lounge Bar', 'Cocktail - Martini', 7853, 320.00, 'Paid', 'Cash', 200.00, 120.00, '2025-10-04 13:18:29', '2025-10-04 13:18:29'),
+(419, 19, 'Brian Harris', 'Restaurant', 'Pancit Bihon, Pancit Canton, Chicken Sopas', 3754, 710.00, 'To be billed', 'Cash', 0.00, 710.00, '2025-10-04 13:19:00', '2025-10-04 13:19:00'),
+(420, 7, 'Charles Garcia', 'Restaurant', 'Tinolang Manok', 6778, 200.00, 'To be billed', 'Cash', 0.00, 200.00, '2025-10-04 13:20:01', '2025-10-04 13:20:01'),
+(421, 2, 'Michael Smith', 'Restaurant', 'Sinigang na Baboy, Fresh Juice', 1066, 420.00, 'To be billed', 'Cash', 0.00, 420.00, '2025-10-04 15:24:34', '2025-10-04 15:24:34'),
+(422, 5, 'Robert Brown', 'Restaurant', 'Sinigang na Baboy, Fresh Juice, Fruit Salad', 4034, 380.00, 'Paid', 'Cash', 55.00, 325.00, '2025-10-04 15:25:39', '2025-10-04 15:25:39'),
+(423, 5, 'Robert Brown', 'Gift Store', 'Handmade Bracelet, Fridge Magnet Set', 4148, 480.00, 'To be billed', NULL, 0.00, 480.00, '2025-10-04 16:05:04', '2025-10-04 16:05:04'),
+(428, 5, 'Robert Brown', 'Gift Store', 'Handmade Bracelet, Fridge Magnet Set', 3229, 480.00, 'To be billed', NULL, 0.00, 480.00, '2025-10-04 16:13:12', '2025-10-04 16:13:12'),
+(429, 10, 'Daniel Lopez', 'Mini Bar', 'Cobra Energy Drink , Chips Ahoy! Chocolate Chip Cookies Snack Pack 38g', 5978, 190.00, 'To be billed', NULL, 0.00, 190.00, '2025-10-04 16:13:57', '2025-10-04 16:13:57'),
+(430, 12, 'Anthony Wilson', 'Mini Bar', 'Cobra Energy Drink , Chips Ahoy! Chocolate Chip Cookies Snack Pack 38g', 9791, 190.00, 'Paid', 'Card', 90.00, 100.00, '2025-10-04 16:14:25', '2025-10-04 16:14:25'),
+(434, 16, 'George Moore', 'Gift Store', 'Decorative Coasters, Handmade Bracelet', 6142, 450.00, 'To be billed', NULL, 0.00, 450.00, '2025-10-04 16:26:32', '2025-10-04 16:26:32'),
+(435, 0, 'Walk-in Guest', 'Gift Store', 'No Items', 3328, 0.00, 'To be billed', NULL, 0.00, 0.00, '2025-10-04 16:26:32', '2025-10-04 16:26:32'),
+(436, 20, 'Kevin Martin', 'Gift Store', 'Fridge Magnet Set, Fragrant Candle, Handmade Bracelet, Mini Photo Frame, Local Snack Pack', 5991, 1350.00, 'To be billed', NULL, 0.00, 1350.00, '2025-10-04 16:26:44', '2025-10-04 16:26:44'),
+(437, 0, 'Walk-in Guest', 'Gift Store', 'No Items', 8394, 0.00, 'To be billed', NULL, 0.00, 0.00, '2025-10-04 16:26:44', '2025-10-04 16:26:44'),
+(438, 0, 'Walk-in Guest', 'Gift Store', 'No Items', 1361, 0.00, 'To be billed', NULL, 0.00, 0.00, '2025-10-04 16:28:11', '2025-10-04 16:28:11'),
+(439, NULL, NULL, 'Gift Store', '', 1333, 0.00, 'To be billed', NULL, 0.00, 0.00, '2025-10-04 16:31:24', '2025-10-04 16:31:24'),
+(440, 2, 'Michael Smith', 'Gift Store', 'Handmade Bracelet, Fridge Magnet Set', 4985, 480.00, 'To be billed', NULL, 0.00, 480.00, '2025-10-04 16:31:34', '2025-10-04 16:31:34'),
+(441, 2, 'Michael Smith', 'Gift Store', 'Handmade Bracelet, Fridge Magnet Set', 5006, 480.00, 'To be billed', NULL, 0.00, 480.00, '2025-10-04 16:36:28', '2025-10-04 16:36:28'),
+(444, 4, 'James Williams', 'Gift Store', 'Handmade Bracelet, Ferrero Rocher Chocolate Box, Decorative Coasters', 5249, 700.00, 'To be billed', NULL, 0.00, 700.00, '2025-10-04 16:37:42', '2025-10-04 16:37:42'),
+(445, 7, 'Charles Garcia', 'Gift Store', 'Ferrero Rocher Chocolate Box', 2027, 250.00, 'Paid', 'Cash', 50.00, 200.00, '2025-10-04 16:38:58', '2025-10-04 16:38:58'),
+(446, 12, 'Anthony Wilson', 'Mini Bar', 'Arla Natural Cheese Mozzarella Cheese Slices', 1775, 600.00, 'To be billed', NULL, 0.00, 600.00, '2025-10-04 16:41:32', '2025-10-04 16:41:32'),
+(447, 12, 'Anthony Wilson', 'Lounge Bar', 'Cocktail - Daiquiri', 6612, 280.00, 'To be billed', NULL, 0.00, 280.00, '2025-10-04 16:43:52', '2025-10-04 16:43:52'),
+(448, 4, 'James Williams', 'Restaurant', 'Fresh Juice, Fruit Salad', 3115, 140.00, 'To be billed', 'Cash', 0.00, 140.00, '2025-10-04 17:01:26', '2025-10-04 17:01:26'),
+(449, 4, 'James Williams', 'Restaurant', 'Tinolang Manok', 2023, 200.00, 'To be billed', 'Cash', 0.00, 200.00, '2025-10-04 17:02:03', '2025-10-04 17:02:03'),
+(450, 2, 'Michael Smith', 'Restaurant', 'Tinolang Manok', 8242, 200.00, 'To be billed', 'Cash', 0.00, 200.00, '2025-10-04 17:06:03', '2025-10-04 17:06:03'),
+(451, 9, 'Christopher Hernandez', 'Lounge Bar', 'Bacardi Gold Rum', 3185, 380.00, 'To be billed', NULL, 0.00, 380.00, '2025-10-04 17:12:52', '2025-10-04 17:12:52'),
+(452, 14, 'Paul Thomas', 'Lounge Bar', 'Baileys Irish Cream, Chivas Regal 12 Years', 6556, 6600.00, 'To be billed', NULL, 0.00, 6600.00, '2025-10-04 19:47:03', '2025-10-04 19:47:03'),
+(454, 5, 'Robert Brown', 'Lounge Bar', 'Cocktail - Mojito, Cocktail - Martini, Cocktail - Pina Colada', 4970, 870.00, 'Paid', 'Cash', 50.00, 820.00, '2025-10-04 19:49:43', '2025-10-04 19:49:43'),
+(455, 10, 'Daniel Lopez', 'Restaurant', 'Iced Tea', 5159, 100.00, 'To be billed', 'Cash', 0.00, 100.00, '2025-10-04 19:51:18', '2025-10-04 19:51:18'),
+(456, 2, 'Michael Smith', 'Restaurant', 'Coffee', 6253, 70.00, 'To be billed', 'Cash', 0.00, 70.00, '2025-10-04 20:18:53', '2025-10-04 20:18:53'),
+(457, 5, 'Robert Brown', 'Restaurant', 'Coffee', 3507, 70.00, 'To be billed', 'Paymaya', 0.00, 70.00, '2025-10-04 20:22:54', '2025-10-04 20:22:54'),
+(458, 6, 'William Jones', 'Restaurant', 'Iced Tea', 3289, 50.00, 'To be billed', 'Cash', 0.00, 50.00, '2025-10-04 20:29:28', '2025-10-04 20:29:28'),
+(459, 6, 'William Jones', 'Restaurant', 'Fresh Juice', 4727, 60.00, 'To be billed', 'Cash', 0.00, 60.00, '2025-10-04 20:31:26', '2025-10-04 20:31:26'),
+(460, 7, 'Charles Garcia', 'Restaurant', 'Coffee', 3054, 70.00, 'To be billed', 'Cash', 0.00, 70.00, '2025-10-04 20:34:33', '2025-10-04 20:34:33'),
+(461, 5, 'Robert Brown', 'Restaurant', 'Chocolate Cake', 7722, 150.00, 'To be billed', 'Cash', 0.00, 150.00, '2025-10-04 20:35:51', '2025-10-04 20:35:51'),
+(462, 2, 'Michael Smith', 'Restaurant', 'Pancit Malabon, Chicken Sopas', 2820, 400.00, 'Paid', 'GCash', 200.00, 200.00, '2025-10-04 20:42:53', '2025-10-04 20:42:53'),
+(463, 6, 'William Jones', 'Gift Store', 'Local Snack Box, La Vista Chocolate Gift Box', 7039, 1850.00, 'To be billed', NULL, 0.00, 1850.00, '2025-10-04 20:44:24', '2025-10-04 20:44:24'),
+(464, 0, '', 'Gift Store', 'Fragrant Candle, Fridge Magnet Set', 5436, 530.00, 'Paid', 'Paymaya', 2.00, 528.00, '2025-10-04 20:44:53', '2025-10-04 20:44:53'),
+(465, 5, 'Robert Brown', 'Mini Bar', 'Beef Jerky, Growers Mixed Nuts', 5891, 290.00, 'To be billed', NULL, 0.00, 290.00, '2025-10-04 20:49:37', '2025-10-04 20:49:37'),
+(466, 5, 'Robert Brown', 'Lounge Bar', 'Chivas Regal 12 Years, Baileys Irish Cream', 7774, 4200.00, 'Paid', 'GCash', 900.00, 3300.00, '2025-10-04 20:50:27', '2025-10-04 20:50:27');
 
--- Indexes and AUTO_INCREMENT for new restaurant POS tables
-ALTER TABLE `restaurant_orders`
-  ADD PRIMARY KEY (`order_id`);
-ALTER TABLE `restaurant_order_items`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `order_id` (`order_id`);
-ALTER TABLE `restaurant_orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
-ALTER TABLE `restaurant_order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
--- Optional: Add foreign key from restaurant_order_items to restaurant_orders
--- Place this near other constraints if needed during import
--- ALTER TABLE `restaurant_order_items`
---   ADD CONSTRAINT `restaurant_items_order_fk` FOREIGN KEY (`order_id`) REFERENCES `restaurant_orders` (`order_id`) ON DELETE CASCADE;
-
--- ---------------------------------------------
--- Restaurant POS enhancements (status/totals/payment/txn)
--- ---------------------------------------------
--- Extend status values and add financial/payment fields
-ALTER TABLE `restaurant_orders`
-  MODIFY COLUMN `status` enum('pending','in_progress','served','paid','cancelled','refunded') DEFAULT 'pending';
-
-ALTER TABLE `restaurant_orders`
-  ADD COLUMN `subtotal_amount` decimal(10,2) NOT NULL DEFAULT 0.00 AFTER `order_type`,
-  ADD COLUMN `tax_amount` decimal(10,2) NOT NULL DEFAULT 0.00 AFTER `subtotal_amount`,
-  ADD COLUMN `payment_method` enum('cash','card','room_charge','gcash','other') DEFAULT 'cash' AFTER `status`,
-  ADD COLUMN `transaction_id` varchar(64) DEFAULT NULL AFTER `payment_method`;
-
--- Keep legacy `total_amount` for compatibility; ensure position after tax
-ALTER TABLE `restaurant_orders`
-  MODIFY COLUMN `total_amount` decimal(10,2) NOT NULL AFTER `tax_amount`;
-
--- Optional unique transaction id for reconciliation
-ALTER TABLE `restaurant_orders`
-  ADD UNIQUE KEY `uniq_restaurant_txn` (`transaction_id`);
-
-
-CREATE TABLE IF NOT EXISTS giftshop_order_items (
-			id INT(11) NOT NULL AUTO_INCREMENT,
-			order_id INT(11) NOT NULL,
-			item_name VARCHAR(255) NOT NULL,
-			quantity INT(11) NOT NULL,
-			unit_price DECIMAL(10,2) NOT NULL,
-			total_price DECIMAL(10,2) NOT NULL,
-			special_instructions TEXT DEFAULT NULL,
-			PRIMARY KEY (id),
-			KEY order_id_idx (order_id)
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 
-    CREATE TABLE IF NOT EXISTS giftshop_orders (
-			order_id INT(11) NOT NULL AUTO_INCREMENT,
-			guest_id INT(11) NOT NULL,
-			total_amount DECIMAL(10,2) NOT NULL,
-			order_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			status ENUM('to_be_billed','paid') DEFAULT 'to_be_billed',
-			staff_id VARCHAR(20) NOT NULL,
-			notes TEXT DEFAULT NULL,
-			subtotal_amount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-			tax_amount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-			payment_method ENUM('cash','card','gcash','other') DEFAULT 'cash',
-			transaction_id VARCHAR(64) DEFAULT NULL,
-			PRIMARY KEY (order_id),
-			UNIQUE KEY uniq_giftshop_txn (transaction_id)
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
-
-    CREATE TABLE `minibar_consumption` (
-  `consumption_id` int(11) NOT NULL AUTO_INCREMENT,
-  `guest_id` int(11) NOT NULL,
-  `room_number` varchar(10) NOT NULL,
+CREATE TABLE `item_images` (
+  `image_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL,
-  `quantity` int(11) NOT NULL DEFAULT 1,
-  `price` decimal(10,2) NOT NULL,
-  `total_cost` decimal(10,2) NOT NULL,
-  `staff_id` varchar(20) NOT NULL,
-  `consumed_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `notes` text DEFAULT NULL,
-  PRIMARY KEY (`consumption_id`),
-  KEY `guest_id` (`guest_id`),
-  KEY `item_id` (`item_id`),
-  KEY `staff_id` (`staff_id`),
-  KEY `room_number` (`room_number`)
+  `filename` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `minibar_refill_logs`
+-- Dumping data for table `item_images`
 --
 
-CREATE TABLE `minibar_refill_logs` (
-  `refill_id` int(11) NOT NULL AUTO_INCREMENT,
-  `room_number` varchar(10) NOT NULL,
-  `item_id` int(11) NOT NULL,
-  `quantity_added` int(11) NOT NULL,
-  `staff_id` varchar(20) NOT NULL,
-  `refilled_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `expiry_date` date DEFAULT NULL,
-  `notes` text DEFAULT NULL,
-  PRIMARY KEY (`refill_id`),
-  KEY `item_id` (`item_id`),
-  KEY `staff_id` (`staff_id`),
-  KEY `room_number` (`room_number`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `minibar_inventory_alerts`
---
-
-CREATE TABLE `minibar_inventory_alerts` (
-  `alert_id` int(11) NOT NULL AUTO_INCREMENT,
-  `item_id` int(11) NOT NULL,
-  `alert_type` enum('low_stock','expiry','out_of_stock') NOT NULL,
-  `room_number` varchar(10) DEFAULT NULL,
-  `threshold_quantity` int(11) DEFAULT NULL,
-  `current_quantity` int(11) DEFAULT NULL,
-  `expiry_date` date DEFAULT NULL,
-  `alert_message` text NOT NULL,
-  `is_resolved` tinyint(1) DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `resolved_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`alert_id`),
-  KEY `item_id` (`item_id`),
-  KEY `alert_type` (`alert_type`),
-  KEY `is_resolved` (`is_resolved`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `item_images` (`image_id`, `item_id`, `filename`) VALUES
+(5, 1297, '1759414297_Beef Jerky.jpg'),
+(6, 1285, '1759414323_Beer Bottle.jpg'),
+(7, 1295, '1759414362_Candy Pack.jpg'),
+(8, 1287, '1759414445_Chips Pack.jpg'),
+(9, 1288, '1759414501_Toblerone.jpg'),
+(10, 1300, '1759414538_Nescafe Original.jpg'),
+(11, 1296, '1759414580_Chips Ahoy! Chocolate Chip Cookies Snack Pack 38g.jpg'),
+(12, 1291, '1759414640_Cobra Energy Drink.jpg'),
+(13, 1298, '1759414719_Minute Maid Fresh Orange Juice.jpg'),
+(14, 1290, '1759414789_Minute Maid Fresh.jpg'),
+(15, 1301, '1759414828_Lemonade Bottle.jpg'),
+(16, 1292, '1759414865_Nestle Fresh Milk.jpg'),
+(17, 1289, '1759414922_Growers Mixed Nuts.jpg'),
+(18, 1294, '1759414967_Ding Dong Snack Mix.jpg'),
+(19, 1284, '1759415002_Coca-Cola Original Taste Soft Drink Can.jpg'),
+(20, 1293, '1759415031_Sparkling Water.jpg'),
+(21, 1299, '1759415117_Lipton Green Tea Lively Fresh.jpg'),
+(22, 1283, '1759415160_Summit Natural Drinking Water.jpg'),
+(23, 1286, '1759415213_Novellino - Rosso Classico.jpg'),
+(24, 1302, '1759581680_Alaska Fruitti Yo! Strawberry Yoghurt Milk Drink.jpg'),
+(25, 1310, '1759415294_Red Horse Beer Bottle.jpg'),
+(26, 1319, '1759415389_Arla Natural Cheese Mozzarella Cheese Slices.jpg'),
+(27, 1313, '1759415430_Cocktail - Daiquiri.jpg'),
+(28, 1304, '1759415464_Cocktail - Margarita.jpg'),
+(29, 1305, '1759415502_Cocktail - Martini.jpg'),
+(30, 1303, '1759415537_Cocktail - Mojito.jpg'),
+(31, 1314, '1759415567_Cocktail - Pina Colada.jpg'),
+(32, 1315, '1759415587_Cocktail - Tequila Sunrise.jpg'),
+(33, 1322, '1759415610_Fruit Platter.jpg'),
+(34, 1308, '1759415645_Ginebra San Miguel Gin.jpg'),
+(35, 1320, '1759415677_Mixed Nuts Bowl.jpg'),
+(36, 1317, '1759415705_Mocktail - Sunrise.jpg'),
+(37, 1316, '1759415730_Mocktail - Virgin Mojito.jpg'),
+(38, 1321, '1759415754_Olives Bowl.jpg'),
+(39, 1311, '1759415781_Red Wine Glass.jpg'),
+(40, 1307, '1759415827_Bacardi Gold Rum.jpg'),
+(41, 1318, '1759415881_Snack Platter.jpg'),
+(42, 1309, '1759415929_Absolut Vodka.jpg'),
+(43, 1306, '1759415960_Jack Daniel\'s.jpg'),
+(44, 1312, '1759415999_White Wine Glass.jpg'),
+(45, 1276, '1759416040_Ferrero Rocher Chocolate Box.jpg'),
+(46, 1267, '1759416071_Coffee Mug.jpg'),
+(47, 1277, '1759416103_Decorative Coasters.jpg'),
+(48, 1272, '1759416133_Fragrant Candle.jpg'),
+(50, 1274, '1759416173_Fridge Magnet.jpg'),
+(51, 1278, '1759416206_Handmade Bracelet.jpg'),
+(52, 1279, '1759416232_Key Holder.jpg'),
+(54, 1275, '1759416280_Local Art Mini Canvas.jpg'),
+(55, 1281, '1759416303_Local Snack Box.jpg'),
+(56, 1270, '1759416322_Local Snack Pack.jpg'),
+(57, 1271, '1759416360_Mini Photo Frame.jpg'),
+(58, 1280, '1759416387_Miniature Figurine.jpg'),
+(59, 1268, '1759416415_Notebook.jpg'),
+(60, 1269, '1759416443_Pen Set.jpg'),
+(62, 1282, '1759416490_Souvenir Pen.jpg'),
+(63, 1273, '1759416510_Souvenir T-shirt.jpg'),
+(64, 1266, '1759416529_Tote Bag.jpg'),
+(65, 1410, '1759577026_Jack n Jill Piattos Sour Cream.jpg'),
+(66, 1412, '1759577061_KitKat Mini Pack.jpg'),
+(67, 1414, '1759577151_Jack \'N Jill Vcut Spicy Barbeque.jpg'),
+(68, 1413, '1759577216_Nature Spring Water 500ml.jpg'),
+(69, 1411, '1759577259_Red Horse Beer 500ml.jpg'),
+(70, 1409, '1759577299_Sprite Can 330ml.jpg'),
+(71, 1423, '1759577326_Cocktail Straw Set.jpg'),
+(72, 1419, '1759577360_Baileys Irish Cream.jpg'),
+(73, 1415, '1759577443_Chivas Regal 12 Years.jpg'),
+(75, 1416, '1759577701_Grey Goose Vodka.jpg'),
+(80, 1418, '1759577721_Hennessy VS Cognac.jpg'),
+(81, 1424, '1759577788_Highball Glass.jpg'),
+(82, 1417, '1759577843_Jose Cuervo Tequila.jpg'),
+(83, 1422, '1759577882_Mixology Cocktail Syrup.jpg'),
+(84, 1420, '1759577941_Smirnoff Vodka.jpg'),
+(85, 1421, '1759577968_Tanduay Ice.jpg'),
+(86, 1405, '1759577992_Hotel La Vista Souvenir Mug.jpg'),
+(87, 1408, '1759578026_La Vista Chocolate Gift Box.jpg'),
+(88, 1406, '1759578092_Local Handmade Necklace.jpg'),
+(89, 1407, '1759578115_Mini Teddy Bear Keychain.jpg'),
+(90, 1426, '1759578304_Handwoven Coin Purse.jpg'),
+(91, 1425, '1759578329_Hotel Signature Scent Perfume.jpg'),
+(92, 1427, '1759578352_Limited Edition Hotel Calendar.jpg'),
+(95, 1480, '1759582148_Royal.jpg');
